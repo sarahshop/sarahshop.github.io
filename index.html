@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarah Shop — Digital Marketplace</title>
+<link rel="icon" type="image/png" href="sarah-logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#02040a;
+  --bg2:#040914;
+  --panel:#07111c;
+  --panel2:#0a1625;
+  --panel3:#0d1d31;
+  --cyan:#72eaff;
+  --cyan2:#baf6ff;
+  --blue:#00b7ff;
+  --deep:#0568ff;
+  --white:#f7fbff;
+  --muted:#758aa0;
+  --line:rgba(83,198,255,.15);
+  --line2:rgba(83,198,255,.30);
+  --shadow:0 30px 90px rgba(0,0,0,.44);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Manrope",sans-serif;
+  color:var(--white);
+  background:
+    radial-gradient(circle at 50% -10%,rgba(0,183,255,.15),transparent 28%),
+    radial-gradient(circle at 90% 55%,rgba(5,104,255,.08),transparent 25%),
+    linear-gradient(180deg,#02040a,#030812 55%,#02040a);
+  overflow-x:hidden;
+}
+a{color:inherit}
+button{font:inherit}
+::selection{background:var(--blue);color:#001018}
+
+.bg-grid{
+  position:fixed;inset:0;z-index:-10;pointer-events:none;opacity:.45;
+  background-image:
+    linear-gradient(rgba(61,183,255,.024) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(61,183,255,.024) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+.bg-glow{
+  position:fixed;width:520px;height:520px;border-radius:50%;
+  filter:blur(150px);opacity:.05;pointer-events:none;z-index:-9;
+}
+.g1{right:-180px;top:260px;background:var(--blue)}
+.g2{left:-220px;bottom:120px;background:var(--deep)}
+
+.topline{
+  min-height:34px;padding:7px 18px;
+  display:flex;justify-content:center;align-items:center;text-align:center;
+  border-bottom:1px solid var(--line);background:#040b13;
+  color:#688098;font-size:10px;
+}
+.topline b{color:var(--cyan)}
+
+nav{
+  width:min(94%,1600px);min-height:76px;margin:16px auto 0;padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid var(--line);border-radius:20px;
+  background:rgba(4,10,18,.86);backdrop-filter:blur(20px);
+  position:sticky;top:12px;z-index:1000;
+  box-shadow:0 20px 70px rgba(0,0,0,.32);
+}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand img{
+  width:46px;height:46px;border-radius:14px;object-fit:cover;
+  border:1px solid rgba(114,234,255,.38);box-shadow:0 0 28px rgba(0,183,255,.20)
+}
+.brand strong{font-family:"Orbitron",sans-serif;font-size:16px;letter-spacing:.4px}
+.brand small{display:block;margin-top:2px;color:#5f7589;font-size:8px;letter-spacing:1.3px}
+.navlinks{display:flex;gap:8px}
+.navlinks a{
+  text-decoration:none;color:#73879b;padding:10px 12px;border-radius:10px;
+  font-size:11px;font-weight:900
+}
+.navlinks a:hover{background:#0a1724;color:white}
+.navcta{
+  text-decoration:none;padding:12px 15px;border-radius:11px;
+  background:linear-gradient(135deg,var(--cyan),var(--deep));
+  color:#001018;font-size:11px;font-weight:900;
+  box-shadow:0 12px 34px rgba(0,183,255,.16)
+}
+
+/* PURE FULL BANNER — no overlay, no cropping, no content on top */
+.banner-zone{
+  width:min(94%,1600px);
+  margin:24px auto 0;
+}
+.banner-shell{
+  border:1px solid rgba(0,183,255,.24);
+  border-radius:28px;
+  overflow:hidden;
+  background:#02050a;
+  box-shadow:var(--shadow),0 0 65px rgba(0,183,255,.06);
+}
+.banner-shell img{
+  width:100%;
+  height:auto;
+  display:block;
+  object-fit:contain;
+}
+
+/* CONTROL DECK BELOW BANNER */
+.deck{
+  width:min(94%,1600px);
+  margin:16px auto 0;
+  display:grid;
+  grid-template-columns:1.4fr .9fr .9fr;
+  gap:14px;
+}
+.deck-main,
+.deck-card{
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(0,183,255,.08),transparent 30%),
+    linear-gradient(145deg,#091522,#06101a);
+  padding:24px;
+  position:relative;
+  overflow:hidden;
+}
+.deck-main::after{
+  content:"SARAH SHOP";
+  position:absolute;right:-6px;bottom:-18px;
+  font-family:"Orbitron",sans-serif;font-size:64px;font-weight:900;
+  color:rgba(255,255,255,.025)
+}
+.kicker{color:var(--cyan);font-size:8px;font-weight:900;letter-spacing:1.2px}
+.deck-main h1{
+  margin-top:9px;
+  font-family:"Orbitron",sans-serif;
+  font-size:clamp(34px,4vw,58px);
+  line-height:.92
+}
+.deck-main h1 span{color:var(--cyan)}
+.deck-main p{
+  max-width:720px;margin-top:12px;color:#788da2;font-size:11px;line-height:1.68
+}
+.hero-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.btn{
+  min-height:44px;padding:0 15px;border-radius:10px;display:inline-flex;align-items:center;
+  text-decoration:none;border:1px solid var(--line);background:#08131f;color:#9fb0c1;
+  font-size:10px;font-weight:900;transition:.22s
+}
+.btn:hover{transform:translateY(-3px);border-color:var(--line2);color:white}
+.btn.primary{
+  border:none;color:#001018;background:linear-gradient(135deg,var(--cyan),var(--deep))
+}
+.deck-card small{color:#53728e;font-size:7px;font-weight:900;letter-spacing:1px}
+.deck-card strong{
+  display:block;margin-top:20px;font-family:"Orbitron",sans-serif;
+  font-size:28px;color:var(--cyan)
+}
+.deck-card span{display:block;margin-top:6px;color:#6e8398;font-size:10px;line-height:1.45}
+
+/* FEATURED STRIP */
+.feature-strip{
+  width:min(94%,1600px);
+  margin:16px auto 0;
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:14px;
+}
+.logo-feature{
+  min-height:190px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:
+    radial-gradient(circle at center,rgba(0,183,255,.12),transparent 42%),
+    #07111c;
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-feature img{
+  width:130px;height:130px;border-radius:25px;object-fit:cover;
+  box-shadow:0 0 48px rgba(0,183,255,.18)
+}
+.live-board{
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#07111c;
+  padding:16px;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+}
+.live-item{
+  border:1px solid rgba(83,198,255,.10);
+  border-radius:14px;
+  background:linear-gradient(145deg,#091522,#06101a);
+  padding:14px;
+  min-height:120px;
+}
+.live-item small{color:#4f718e;font-size:7px;font-weight:900}
+.live-item b{display:block;margin-top:18px;font-size:13px}
+.live-item span{display:block;margin-top:5px;color:var(--cyan);font-size:10px}
+
+/* SECTIONS */
+.section{
+  width:min(94%,1600px);
+  margin:120px auto;
+}
+.section-head{
+  display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:26px
+}
+.section h2{
+  font-family:"Orbitron",sans-serif;
+  font-size:clamp(38px,5vw,72px);line-height:.92
+}
+.section h2 span{color:#2c4961}
+.section-head p{max-width:500px;color:#70859a;font-size:12px;line-height:1.65}
+
+/* CATEGORIES AS SWITCHBOARD */
+.switchboard{
+  display:grid;
+  grid-template-columns:250px 1fr;
+  gap:14px;
+}
+.tabs{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:#06101a;
+  padding:10px;
+  align-self:start;
+  position:sticky;
+  top:105px;
+}
+.tab{
+  width:100%;
+  text-align:left;
+  padding:12px 13px;
+  border-radius:10px;
+  border:none;
+  background:transparent;
+  color:#6e8499;
+  cursor:pointer;
+  font-size:10px;
+  font-weight:900;
+  margin:3px 0;
+}
+.tab.active,.tab:hover{
+  color:#001018;
+  background:linear-gradient(135deg,var(--cyan),var(--deep));
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.product{
+  min-height:278px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.012),transparent 35%),
+    linear-gradient(145deg,#091522,#05101a);
+  padding:18px;
+  position:relative;
+  overflow:hidden;
+  transition:.24s;
+}
+.product::after{
+  content:"";
+  position:absolute;right:-44px;top:-44px;width:110px;height:110px;border-radius:50%;
+  border:1px solid rgba(0,183,255,.08);background:rgba(0,183,255,.03)
+}
+.product:hover{
+  transform:translateY(-6px);
+  border-color:rgba(0,183,255,.34);
+  box-shadow:0 24px 60px rgba(0,0,0,.30)
+}
+.product-type{color:#4f718e;font-size:7px;font-weight:900;letter-spacing:1.1px}
+.product h3{margin-top:16px;font-size:19px}
+.price-stack{display:grid;gap:7px;margin-top:16px}
+.price-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9px 10px;border-radius:9px;
+  border:1px solid rgba(83,198,255,.09);
+  background:rgba(3,10,17,.52);
+  color:#7d91a5;font-size:10px
+}
+.price-row b{color:var(--cyan)}
+.product.hidden{display:none}
+
+/* HOW */
+.steps{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:14px;
+}
+.step{
+  min-height:250px;border:1px solid var(--line);border-radius:20px;
+  background:linear-gradient(145deg,#081522,#05101a);
+  padding:24px;position:relative;overflow:hidden
+}
+.step-num{
+  position:absolute;right:14px;top:-18px;
+  font-family:"Orbitron",sans-serif;font-size:92px;font-weight:900;color:rgba(255,255,255,.025)
+}
+.step small{color:var(--cyan);font-weight:900;font-size:8px}
+.step h3{margin-top:54px;font-size:20px}
+.step p{margin-top:8px;color:#6f8498;font-size:11px;line-height:1.7}
+
+/* FINAL */
+.final-panel{
+  width:min(94%,1600px);
+  margin:0 auto 110px;
+  display:grid;
+  grid-template-columns:.7fr 1.3fr;
+  gap:14px;
+}
+.final-logo{
+  border:1px solid var(--line);border-radius:22px;background:#07111c;
+  min-height:300px;display:flex;align-items:center;justify-content:center
+}
+.final-logo img{
+  width:180px;height:180px;border-radius:30px;object-fit:cover;
+  box-shadow:0 0 60px rgba(0,183,255,.20)
+}
+.cta{
+  padding:32px;border-radius:22px;border:1px solid rgba(0,183,255,.22);
+  background:
+    radial-gradient(circle at 90% 15%,rgba(0,183,255,.14),transparent 24%),
+    linear-gradient(135deg,#0a1726,#06101a);
+  display:flex;flex-direction:column;justify-content:center
+}
+.cta h3{font-family:"Orbitron",sans-serif;font-size:30px}
+.cta p{margin-top:8px;color:#73899f;font-size:12px;line-height:1.7;max-width:820px}
+
+footer{
+  width:min(94%,1600px);margin:auto;min-height:110px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;color:#50677d;font-size:9px
+}
+footer a{text-decoration:none;color:#62788e}
+footer a:hover{color:var(--cyan)}
+
+@media(max-width:1100px){
+  .navlinks{display:none}
+  .deck{grid-template-columns:1fr 1fr}
+  .deck-main{grid-column:1/-1}
+  .feature-strip{grid-template-columns:180px 1fr}
+  .live-board{grid-template-columns:repeat(3,1fr)}
+  .switchboard{grid-template-columns:1fr}
+  .tabs{position:relative;top:auto;display:flex;flex-wrap:wrap}
+  .tab{width:auto}
+  .products{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  .brand small{display:none}
+  .deck{grid-template-columns:1fr}
+  .deck-main{grid-column:auto}
+  .feature-strip{grid-template-columns:1fr}
+  .live-board{grid-template-columns:repeat(2,1fr)}
+  .section-head{display:block}
+  .section-head p{margin-top:14px}
+  .products{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .final-panel{grid-template-columns:1fr}
+  footer{flex-direction:column;align-items:flex-start;justify-content:center;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow g1"></div>
+<div class="bg-glow g2"></div>
+
+<div class="topline">
+  <b>Sarah Shop</b>&nbsp; • &nbsp; Digital marketplace &nbsp; • &nbsp; Purchases are handled through Discord tickets
+</div>
+
+<nav>
+  <a href="website.html" class="brand">
+    <img src="sarah-logo.png" alt="Sarah Shop logo">
+    <div>
+      <strong>SARAH SHOP</strong>
+      <small>DIGITAL MARKETPLACE</small>
+    </div>
+  </a>
+
+  <div class="navlinks">
+    <a href="#products">Products</a>
+    <a href="#how">How to Buy</a>
+    <a href="tos.html">Terms</a>
+  </div>
+
+  <a href="https://discord.gg/AEdJtcKwVB" target="_blank" class="navcta">
+    Purchase Ticket
+  </a>
+</nav>
+
+<!-- FULL IMAGE, NOTHING OVERLAPS IT -->
+<section class="banner-zone">
+  <div class="banner-shell">
+    <img src="sarah-banner.png" alt="Sarah Shop banner">
+  </div>
+</section>
+
+<!-- UI STARTS BELOW IMAGE -->
+<section class="deck">
+  <div class="deck-main">
+    <div class="kicker">SARAH SHOP / STORE OPEN</div>
+    <h1>YOUR <span>DIGITAL</span> MARKET.</h1>
+    <p>Streaming, Discord, AI, gaming and social products in one storefront. Pick what you want, check the price, then complete the order inside a Discord Purchase Ticket.</p>
+
+    <div class="hero-actions">
+      <a href="#products" class="btn primary">Browse Products →</a>
+      <a href="https://discord.gg/AEdJtcKwVB" target="_blank" class="btn">Open Discord ↗</a>
+    </div>
+  </div>
+
+  <div class="deck-card">
+    <small>CATALOG SIZE</small>
+    <strong>20+</strong>
+    <span>Products and services across five categories.</span>
+  </div>
+
+  <div class="deck-card">
+    <small>DELIVERY</small>
+    <strong>48H</strong>
+    <span>Maximum on select products depending on stock.</span>
+  </div>
+</section>
+
+<section class="feature-strip">
+  <div class="logo-feature">
+    <img src="sarah-logo.png" alt="Sarah Shop SS logo">
+  </div>
+
+  <div class="live-board">
+    <div class="live-item"><small>STREAMING</small><b>Netflix</b><span>From $3</span></div>
+    <div class="live-item"><small>AI</small><b>ChatGPT</b><span>From $6</span></div>
+    <div class="live-item"><small>DISCORD</small><b>Boosts</b><span>From $4</span></div>
+    <div class="live-item"><small>GAMING</small><b>Fortnite</b><span>From $8</span></div>
+    <div class="live-item"><small>SOCIAL</small><b>TikTok</b><span>From $5</span></div>
+  </div>
+</section>
+
+<section class="section" id="products">
+  <div class="section-head">
+    <div>
+      <div class="kicker">01 / PRODUCT SWITCHBOARD</div>
+      <h2>PICK A<br><span>CATEGORY.</span></h2>
+    </div>
+    <p>Use the left-side category control, then check the exact price rows inside each product card.</p>
+  </div>
+
+  <div class="switchboard">
+    <div class="tabs">
+      <button class="tab active" data-category="all">All Products</button>
+      <button class="tab" data-category="social">Social</button>
+      <button class="tab" data-category="discord">Discord</button>
+      <button class="tab" data-category="ai">AI</button>
+      <button class="tab" data-category="streaming">Streaming</button>
+      <button class="tab" data-category="gaming">Gaming</button>
+    </div>
+
+    <div class="products">
+      <div class="product" data-category="social"><div class="product-type">SOCIAL</div><h3>TikTok</h3><div class="price-stack"><div class="price-row"><span>Basic Package</span><b>$5</b></div><div class="price-row"><span>Medium Package</span><b>$10</b></div><div class="price-row"><span>Large Package</span><b>$20</b></div></div></div>
+      <div class="product" data-category="social"><div class="product-type">SOCIAL</div><h3>Instagram</h3><div class="price-stack"><div class="price-row"><span>Basic Package</span><b>$5</b></div><div class="price-row"><span>Medium Package</span><b>$10</b></div><div class="price-row"><span>Large Package</span><b>$20</b></div></div></div>
+      <div class="product" data-category="social"><div class="product-type">SOCIAL</div><h3>YouTube</h3><div class="price-stack"><div class="price-row"><span>Basic Package</span><b>$5</b></div><div class="price-row"><span>Medium Package</span><b>$12</b></div><div class="price-row"><span>Large Package</span><b>$25</b></div></div></div>
+
+      <div class="product" data-category="discord"><div class="product-type">DISCORD SERVICES</div><h3>Server Boosts</h3><div class="price-stack"><div class="price-row"><span>Small Pack</span><b>$4</b></div><div class="price-row"><span>Medium Pack</span><b>$8</b></div><div class="price-row"><span>Large Pack</span><b>$15</b></div></div></div>
+      <div class="product" data-category="discord"><div class="product-type">DISCORD SERVICES</div><h3>Real Members</h3><div class="price-stack"><div class="price-row"><span>Starter</span><b>$5</b></div><div class="price-row"><span>Medium</span><b>$10</b></div><div class="price-row"><span>Large</span><b>$20</b></div></div></div>
+      <div class="product" data-category="discord"><div class="product-type">DISCORD SERVICES</div><h3>Aged Accounts</h3><div class="price-stack"><div class="price-row"><span>Standard</span><b>$4</b></div><div class="price-row"><span>Older</span><b>$8</b></div><div class="price-row"><span>Premium</span><b>$12</b></div></div></div>
+      <div class="product" data-category="discord"><div class="product-type">DISCORD SERVICES</div><h3>Decorations</h3><div class="price-stack"><div class="price-row"><span>Standard</span><b>$5</b></div><div class="price-row"><span>Premium</span><b>$10</b></div><div class="price-row"><span>Special</span><b>$15</b></div></div></div>
+
+      <div class="product" data-category="ai"><div class="product-type">AI SERVICES</div><h3>ChatGPT</h3><div class="price-stack"><div class="price-row"><span>1 Month</span><b>$6</b></div><div class="price-row"><span>3 Months</span><b>$15</b></div></div></div>
+      <div class="product" data-category="ai"><div class="product-type">AI SERVICES</div><h3>Claude</h3><div class="price-stack"><div class="price-row"><span>1 Month</span><b>$5</b></div><div class="price-row"><span>3 Months</span><b>$13</b></div></div></div>
+      <div class="product" data-category="ai"><div class="product-type">AI SERVICES</div><h3>Gemini</h3><div class="price-stack"><div class="price-row"><span>1 Month</span><b>$4</b></div><div class="price-row"><span>3 Months</span><b>$10</b></div></div></div>
+
+      <div class="product" data-category="streaming"><div class="product-type">STREAMING</div><h3>Netflix</h3><div class="price-stack"><div class="price-row"><span>1 Month</span><b>$3</b></div><div class="price-row"><span>3 Months</span><b>$8</b></div><div class="price-row"><span>Lifetime</span><b>$22</b></div></div></div>
+      <div class="product" data-category="streaming"><div class="product-type">STREAMING</div><h3>Crunchyroll</h3><div class="price-stack"><div class="price-row"><span>1 Month</span><b>$3</b></div><div class="price-row"><span>3 Months</span><b>$7</b></div><div class="price-row"><span>Lifetime</span><b>$18</b></div></div></div>
+      <div class="product" data-category="streaming"><div class="product-type">STREAMING</div><h3>HBO Max</h3><div class="price-stack"><div class="price-row"><span>1 Month</span><b>$4</b></div><div class="price-row"><span>3 Months</span><b>$10</b></div><div class="price-row"><span>Lifetime</span><b>$25</b></div></div></div>
+      <div class="product" data-category="streaming"><div class="product-type">STREAMING</div><h3>Spotify</h3><div class="price-stack"><div class="price-row"><span>12 Months</span><b>$5</b></div><div class="price-row"><span>Lifetime</span><b>$10</b></div></div></div>
+      <div class="product" data-category="streaming"><div class="product-type">STREAMING</div><h3>Prime Video</h3><div class="price-stack"><div class="price-row"><span>1 Month</span><b>$3</b></div><div class="price-row"><span>3 Months</span><b>$8</b></div><div class="price-row"><span>Lifetime</span><b>$20</b></div></div></div>
+      <div class="product" data-category="streaming"><div class="product-type">STREAMING</div><h3>Paramount+</h3><div class="price-stack"><div class="price-row"><span>1 Month</span><b>$3</b></div><div class="price-row"><span>3 Months</span><b>$7</b></div><div class="price-row"><span>Lifetime</span><b>$18</b></div></div></div>
+
+      <div class="product" data-category="gaming"><div class="product-type">GAMING ACCOUNTS</div><h3>Fortnite</h3><div class="price-stack"><div class="price-row"><span>Starter</span><b>$8</b></div><div class="price-row"><span>Better Account</span><b>$15</b></div><div class="price-row"><span>Premium Account</span><b>$25+</b></div></div></div>
+      <div class="product" data-category="gaming"><div class="product-type">GAMING ACCOUNTS</div><h3>Rainbow Six</h3><div class="price-stack"><div class="price-row"><span>Starter</span><b>$7</b></div><div class="price-row"><span>Better Account</span><b>$14</b></div><div class="price-row"><span>Premium Account</span><b>$22+</b></div></div></div>
+      <div class="product" data-category="gaming"><div class="product-type">GAMING ACCOUNTS</div><h3>Valorant</h3><div class="price-stack"><div class="price-row"><span>Starter</span><b>$7</b></div><div class="price-row"><span>Better Account</span><b>$15</b></div><div class="price-row"><span>Premium Account</span><b>$25+</b></div></div></div>
+      <div class="product" data-category="gaming"><div class="product-type">GAMING ACCOUNTS</div><h3>Minecraft</h3><div class="price-stack"><div class="price-row"><span>Standard</span><b>$6</b></div><div class="price-row"><span>Premium</span><b>$12</b></div></div></div>
+      <div class="product" data-category="gaming"><div class="product-type">GAMING ACCOUNTS</div><h3>Roblox</h3><div class="price-stack"><div class="price-row"><span>Starter</span><b>$6</b></div><div class="price-row"><span>Better Account</span><b>$12</b></div><div class="price-row"><span>Premium Account</span><b>$20+</b></div></div></div>
+      <div class="product" data-category="gaming"><div class="product-type">GAMING ACCOUNTS</div><h3>Rust</h3><div class="price-stack"><div class="price-row"><span>Standard</span><b>$7</b></div><div class="price-row"><span>Premium</span><b>$15</b></div></div></div>
+      <div class="product" data-category="gaming"><div class="product-type">GAMING ACCOUNTS</div><h3>Apex</h3><div class="price-stack"><div class="price-row"><span>Starter</span><b>$6</b></div><div class="price-row"><span>Better Account</span><b>$12</b></div><div class="price-row"><span>Premium Account</span><b>$20+</b></div></div></div>
+      <div class="product" data-category="gaming"><div class="product-type">GAMING ACCOUNTS</div><h3>Steam Games Accounts</h3><div class="price-stack"><div class="price-row"><span>Standard</span><b>$8</b></div><div class="price-row"><span>Better Account</span><b>$15</b></div><div class="price-row"><span>Premium</span><b>$25+</b></div></div></div>
+      <div class="product" data-category="gaming"><div class="product-type">GAMING ACCOUNTS</div><h3>Epic Games Accounts</h3><div class="price-stack"><div class="price-row"><span>Standard</span><b>$8</b></div><div class="price-row"><span>Better Account</span><b>$15</b></div><div class="price-row"><span>Premium</span><b>$25+</b></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="section-head">
+    <div>
+      <div class="kicker">02 / HOW TO BUY</div>
+      <h2>THREE<br><span>STEPS.</span></h2>
+    </div>
+    <p>No checkout page. No extra forms. Pick what you want and complete the order inside your Discord Purchase Ticket.</p>
+  </div>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><small>STEP 01</small><h3>Choose the product</h3><p>Pick the exact package, duration, or account tier from the product board.</p></div>
+    <div class="step"><div class="step-num">02</div><small>STEP 02</small><h3>Open a ticket</h3><p>Join the Sarah Shop Discord and open a Purchase Ticket.</p></div>
+    <div class="step"><div class="step-num">03</div><small>STEP 03</small><h3>Tell staff</h3><p>Send the product name and exact option you picked, then continue the order there.</p></div>
+  </div>
+</section>
+
+<section class="final-panel">
+  <div class="final-logo">
+    <img src="sarah-logo.png" alt="Sarah Shop logo">
+  </div>
+
+  <div class="cta">
+    <h3>READY TO ORDER?</h3>
+    <p>Open a Purchase Ticket in Discord. Select products may take up to 48 hours depending on stock and delivery type.</p>
+
+    <div class="hero-actions">
+      <a href="https://discord.gg/AEdJtcKwVB" target="_blank" class="btn primary">Open Purchase Ticket →</a>
+      <a href="tos.html" class="btn">Read Terms</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>SARAH SHOP © 2026</span>
+  <span>DIGITAL MARKETPLACE</span>
+  <a href="tos.html">Terms of Service</a>
+</footer>
+
+<script>
+const tabs=document.querySelectorAll(".tab");
+const products=document.querySelectorAll(".product");
+
+tabs.forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    tabs.forEach(btn=>btn.classList.remove("active"));
+    tab.classList.add("active");
+    const category=tab.dataset.category;
+
+    products.forEach(product=>{
+      if(category==="all"||product.dataset.category===category){
+        product.classList.remove("hidden");
+      }else{
+        product.classList.add("hidden");
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
