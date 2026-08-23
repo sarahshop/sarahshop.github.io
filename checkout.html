@@ -51,7 +51,13 @@
       <h1 id="name">Loading…</h1>
       <div class="label">OPTION</div><div id="option" class="value">—</div>
       <div class="label">PRICE</div><div id="usd" class="price">$0.00</div><div class="label">LIVE STOCK</div><div id="stock" class="value">Checking…</div>
-      <div class="label">ORDER ID</div><div class="orderline"><div id="order" class="value">—</div><button class="copy" id="copyOrder">COPY</button></div>
+      <div class="label">DISCORD USERNAME</div>
+<div style="margin-top:7px">
+  <input id="discordUsername" type="text" maxlength="64" placeholder="@yourusername" autocomplete="username"
+    style="width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--line);background:#06101a;color:#eaf8ff;outline:none;font:inherit">
+</div>
+<div id="discordError" style="display:none;margin-top:7px;color:#d17777;font-size:9px;font-weight:800">Enter your Discord username before continuing.</div>
+<div class="label">ORDER ID</div><div class="orderline"><div id="order" class="value">—</div><button class="copy" id="copyOrder">COPY</button></div>
       <div class="summary">Review this page before continuing. The final order, availability, payment, and delivery details are confirmed inside your Discord Purchase Ticket.</div>
     </div>
   </section>
@@ -80,6 +86,8 @@ const oid=makeId();document.getElementById("order").textContent=oid;
 const stockEl=document.getElementById("stock");
 const ticket=document.getElementById("purchaseTicket");
 const saveStatus=document.getElementById("orderSaveStatus");
+const discordUsername=document.getElementById("discordUsername");
+const discordError=document.getElementById("discordError");
 let selectedProduct=null;
 let orderSaved=false;
 let savingOrder=false;
@@ -128,6 +136,13 @@ async function saveOrderToSupabase(){
   if(orderSaved) return true;
   if(savingOrder) return false;
   if(!selectedProduct) throw new Error("Product is not loaded yet.");
+  const username=discordUsername.value.trim();
+  if(!username){
+    discordError.style.display="block";
+    discordUsername.focus();
+    throw new Error("Discord username is required.");
+  }
+  discordError.style.display="none";
 
   savingOrder=true;
   saveStatus.textContent="Saving Order ID…";
@@ -148,7 +163,8 @@ async function saveOrderToSupabase(){
     option_name:selectedProduct.option || null,
     price:Number(selectedProduct.price),
     quantity:1,
-    status:"pending"
+    status:"pending",
+    discord_username:username
   };
 
   const r=await fetch(`${url}/rest/v1/orders`,{
@@ -173,6 +189,8 @@ async function saveOrderToSupabase(){
   saveStatus.textContent="Order ID saved ✓ Open Discord and paste this Order ID in your Purchase Ticket.";
   return true;
 }
+
+discordUsername.addEventListener("input",()=>{if(discordUsername.value.trim())discordError.style.display="none"});
 
 ticket.addEventListener("click",async e=>{
   if(orderSaved) return;
