@@ -264,30 +264,100 @@
 
 <div class="drawer" id="drawer"><div class="drawer-backdrop" data-close></div><aside class="drawer-panel"><div class="drawer-top"><div><div class="kicker">PRODUCT OPTIONS</div><h2 id="drawerTitle">Product</h2></div><button class="close" data-close>×</button></div><div class="drawer-img"><img id="drawerImage" src="sarah-logo.png"></div><p class="drawer-desc" id="drawerDesc"></p><div class="option-list" id="optionList"></div></aside></div>
 
-<script src="products.js"></script><script src="ui.js"></script>
+<script src="config.js"></script><script src="products.js"></script><script src="supabase-products.js"></script><script src="ui.js"></script>
 <script>
 const IMAGES={Netflix:"netflix.png",Crunchyroll:"crunchyroll.png","HBO Max":"hbo-max.png",Spotify:"spotify.png","Prime Video":"prime-video.png","Paramount+":"paramount-plus.png",ChatGPT:"chatgpt.png",Claude:"claude.png",Gemini:"gemini.png","Server Boosts":"discord.png","Real Members":"discord.png",TikTok:"tiktok.png",Instagram:"instagram.png",YouTube:"youtube.png",Fortnite:"fortnite.png",Valorant:"valorant.png"};
 const DESC={Netflix:"Netflix account/service options.",Crunchyroll:"Crunchyroll account/service options.","HBO Max":"HBO Max account/service options.",Spotify:"Spotify streaming options.","Prime Video":"Prime Video account/service options.","Paramount+":"Paramount+ account/service options.",ChatGPT:"ChatGPT plan options.",Claude:"Claude plan options.",Gemini:"Gemini plan options.","Server Boosts":"Discord server boost packages.","Real Members":"Discord member packages.",TikTok:"TikTok social media service packages.",Instagram:"Instagram social media service packages.",YouTube:"YouTube social media service packages.",Fortnite:"Fortnite account tiers.",Valorant:"Valorant account tiers."};
 const CAT={all:"All Products",streaming:"Streaming",ai:"AI Services",discord:"Discord",social:"Social Media",gaming:"Gaming"};
-const groups={};for(const p of SARAH_PRODUCTS){const k=p.cat+"|"+p.name;(groups[k]??=[]).push(p)}
+let LIVE_PRODUCTS = Array.isArray(window.SARAH_PRODUCTS) ? window.SARAH_PRODUCTS.map(x=>({...x,stock:null})) : [];
+let groups={};
 const products=document.getElementById("products"),search=document.getElementById("search"),count=document.getElementById("count");let activeCat="all";
 const money=n=>"$"+Number(n).toFixed(Number(n)%1?2:0);
+
+function rebuildGroups(){
+  groups={};
+  for(const p of LIVE_PRODUCTS){
+    const k=p.cat+"|"+p.name;
+    (groups[k]??=[]).push(p);
+  }
+}
+
+function stockText(items){
+  if(items.some(x=>x.stock===null || x.stock===undefined)) return "Stock loading…";
+  const total=items.reduce((a,x)=>a+Math.max(0,Number(x.stock||0)),0);
+  return total>0 ? `${total} in stock` : "Out of stock";
+}
+
 function render(){
  const q=search.value.trim().toLowerCase();products.innerHTML="";let shown=0;
- for(const [key,items] of Object.entries(groups)){const [cat,name]=key.split("|"),hay=(name+" "+cat+" "+items.map(x=>x.option).join(" ")).toLowerCase();if(activeCat!=="all"&&cat!==activeCat)continue;if(q&&!hay.includes(q))continue;shown++;const min=Math.min(...items.map(x=>Number(x.price)));
-  const el=document.createElement("article");el.className="product tilt";el.innerHTML=`<div class="product-media"><img src="${IMAGES[name]||"sarah-logo.png"}" alt="${name}" loading="lazy"></div><div class="product-body depth-1"><div class="product-top"><small>${CAT[cat]||cat}</small><span class="badge">● AVAILABLE</span></div><h3>${name}</h3><div class="desc">${DESC[name]||"Available Sarah Shop product."}</div><div class="meta"><span>${items.length} option${items.length>1?"s":""}</span><b>From ${money(min)}</b></div><button class="view" data-product="${name}">VIEW OPTIONS →</button></div>`;products.appendChild(el)
+ for(const [key,items] of Object.entries(groups)){
+   const [cat,name]=key.split("|"),hay=(name+" "+cat+" "+items.map(x=>x.option).join(" ")).toLowerCase();
+   if(activeCat!=="all"&&cat!==activeCat)continue;
+   if(q&&!hay.includes(q))continue;
+   shown++;
+   const available=items.filter(x=>x.stock===null || x.stock===undefined || Number(x.stock)>0);
+   const priced=available.length?available:items;
+   const min=Math.min(...priced.map(x=>Number(x.price)));
+   const totalKnown=items.every(x=>x.stock!==null && x.stock!==undefined);
+   const total=items.reduce((a,x)=>a+Math.max(0,Number(x.stock||0)),0);
+   const badge = totalKnown && total<=0 ? "● OUT OF STOCK" : "● AVAILABLE";
+   const el=document.createElement("article");
+   el.className="product tilt";
+   el.innerHTML=`<div class="product-media"><img src="${IMAGES[name]||items[0]?.image||"sarah-logo.png"}" alt="${name}" loading="lazy"></div><div class="product-body depth-1"><div class="product-top"><small>${CAT[cat]||cat}</small><span class="badge">${badge}</span></div><h3>${name}</h3><div class="desc">${DESC[name]||"Available Sarah Shop product."}</div><div class="meta"><span>${stockText(items)}</span><b>From ${money(min)}</b></div><button class="view" data-product="${name}">VIEW OPTIONS →</button></div>`;
+   products.appendChild(el)
  }
- count.textContent=shown===1?"1 product":shown+" products";if(!shown)products.innerHTML='<div class="empty">No products found. Try another search or category.</div>';bindTilt()
+ count.textContent=shown===1?"1 product":shown+" products";
+ if(!shown)products.innerHTML='<div class="empty">No products found. Try another search or category.</div>';
+ bindTilt()
 }
-function setCat(cat,scroll=true){activeCat=cat;document.querySelectorAll("[data-cat]").forEach(x=>x.classList.toggle("active",x.dataset.cat===cat));render();if(scroll)document.getElementById("catalog").scrollIntoView({behavior:"smooth"})}
+
+function setCat(cat,scroll=true){
+ activeCat=cat;
+ document.querySelectorAll("[data-cat]").forEach(x=>x.classList.toggle("active",x.dataset.cat===cat));
+ render();
+ if(scroll)document.getElementById("catalog").scrollIntoView({behavior:"smooth"})
+}
+
 document.querySelectorAll("[data-cat]").forEach(btn=>btn.onclick=()=>setCat(btn.dataset.cat));
 document.querySelectorAll("[data-jump]").forEach(a=>a.onclick=e=>{e.preventDefault();setCat(a.dataset.jump)});
-search.oninput=render;document.getElementById("clearSearch").onclick=()=>{search.value="";render();search.focus()};
+search.oninput=render;
+document.getElementById("clearSearch").onclick=()=>{search.value="";render();search.focus()};
 document.addEventListener("click",e=>{const v=e.target.closest("[data-product]");if(v)openDrawer(v.dataset.product);if(e.target.closest("[data-close]"))closeDrawer()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawer()});
-function openDrawer(name){let found=null;for(const [key,items] of Object.entries(groups)){const [,n]=key.split("|");if(n===name){found=items;break}}if(!found)return;drawerTitle.textContent=name;drawerImage.src=IMAGES[name]||"sarah-logo.png";drawerDesc.textContent=DESC[name]||"Available Sarah Shop product.";optionList.innerHTML=found.map(p=>`<div class="option"><span>${p.option}</span><b>${money(p.price)}</b><a href="checkout.html?id=${encodeURIComponent(p.id)}">Review →</a></div>`).join("");drawer.classList.add("show");document.body.style.overflow="hidden"}
+
+function openDrawer(name){
+ let found=null;
+ for(const [key,items] of Object.entries(groups)){const [,n]=key.split("|");if(n===name){found=items;break}}
+ if(!found)return;
+ drawerTitle.textContent=name;
+ drawerImage.src=IMAGES[name]||found[0]?.image||"sarah-logo.png";
+ drawerDesc.textContent=DESC[name]||"Available Sarah Shop product.";
+ optionList.innerHTML=found.map(p=>{
+   const known=p.stock!==null && p.stock!==undefined;
+   const sold=known && Number(p.stock)<=0;
+   const stock=known ? (sold?"OUT OF STOCK":`${p.stock} LEFT`) : "CHECKING STOCK";
+   return `<div class="option"><span>${p.option}<small style="display:block;margin-top:4px;color:${sold?"#d17777":"#5f8299"}">${stock}</small></span><b>${money(p.price)}</b>${sold?'<span style="padding:8px 10px;color:#6d7b88;font-size:8px;font-weight:900">SOLD OUT</span>':`<a href="checkout.html?id=${encodeURIComponent(p.id)}">Review →</a>`}</div>`;
+ }).join("");
+ drawer.classList.add("show");
+ document.body.style.overflow="hidden"
+}
 function closeDrawer(){drawer.classList.remove("show");document.body.style.overflow=""}
 function bindTilt(){document.querySelectorAll(".tilt").forEach(card=>{if(card.dataset.tiltBound)return;card.dataset.tiltBound="1";card.onmousemove=e=>{if(window.matchMedia("(pointer:coarse)").matches)return;const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`rotateX(${(-y*6).toFixed(2)}deg) rotateY(${(x*7).toFixed(2)}deg) translateY(-3px)`};card.onmouseleave=()=>card.style.transform=""})}
-render();bindTilt();
-</script>
+
+async function loadLiveStore(){
+  rebuildGroups();
+  render(); // immediate local fallback
+  try{
+    const dbProducts=await SARAH_DB.loadProducts();
+    if(dbProducts.length){
+      LIVE_PRODUCTS=dbProducts;
+      rebuildGroups();
+      render();
+    }
+  }catch(err){
+    console.error(err);
+    count.textContent += " • live stock unavailable";
+  }
+}
+loadLiveStore();</script>
 </body></html>

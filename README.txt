@@ -1,17 +1,17 @@
-SARAH SHOP — LITECOIN CHECKOUT
+SARAH SHOP — MAX 3D REDESIGN
 
-FILES
-index.html       Store with Buy buttons
-checkout.html    Litecoin checkout
-success.html     Post-payment instructions
-tos.html         Terms
-config.js        Store setup
-products.js      Products/prices
-sarah-banner.png
-sarah-logo.png
+This version adds:
+- stronger 3D tilt across the site
+- floating product cards in the hero
+- cursor glow
+- parallax mouse movement
+- holographic light sweeps
+- animated aurora background
+- perspective grid effects
+- neon glass depth
+- scroll reveal animations
+- upgraded 3D checkout
+- upgraded 3D TOS
+- upgraded 3D order handoff page
 
-SECURITY
-- Never put a seed phrase/private key in this folder or on GitHub.
-- The site only needs a PUBLIC Litecoin receiving address.
-- This is a static GitHub Pages checkout. It can create a Litecoin payment link and calculate a live LTC amount, but it cannot securely verify blockchain confirmations by itself.
-- Buyers are told to provide their Order ID + TXID in Discord for verification.
+Upload ALL files to the root of your GitHub Pages repository.
