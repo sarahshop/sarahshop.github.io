@@ -50,7 +50,7 @@
       <div class="kicker">SELECTED PRODUCT</div>
       <h1 id="name">Loading…</h1>
       <div class="label">OPTION</div><div id="option" class="value">—</div>
-      <div class="label">PRICE</div><div id="usd" class="price">$0.00</div>
+      <div class="label">PRICE</div><div id="usd" class="price">$0.00</div><div class="label">LIVE STOCK</div><div id="stock" class="value">Checking…</div>
       <div class="label">ORDER ID</div><div class="orderline"><div id="order" class="value">—</div><button class="copy" id="copyOrder">COPY</button></div>
       <div class="summary">Review this page before continuing. The final order, availability, payment, and delivery details are confirmed inside your Discord Purchase Ticket.</div>
     </div>
@@ -66,18 +66,57 @@
       <div class="step"><span class="step-num">3</span><b>Confirm the exact order</b><p>Staff confirms product, option, price, stock, and delivery.</p></div>
       <div class="step"><span class="step-num">4</span><b>Pay & receive</b><p>Payment and final delivery are handled in the Purchase Ticket.</p></div>
     </div>
-    <div class="actions"><a class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank">Open Purchase Ticket →</a><a class="btn" href="index.html">Keep Browsing</a></div>
+    <div class="actions"><a id="purchaseTicket" class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank">Open Purchase Ticket →</a><a class="btn" href="index.html">Keep Browsing</a></div>
     <div class="note">Do not send payment until the exact order has been confirmed in the ticket.</div>
   </section>
 </main>
 
-<script src="products.js"></script><script src="ui.js"></script>
+<script src="config.js"></script><script src="products.js"></script><script src="supabase-products.js"></script><script src="ui.js"></script>
 <script>
 const IMAGES={Netflix:"netflix.png",Crunchyroll:"crunchyroll.png","HBO Max":"hbo-max.png",Spotify:"spotify.png","Prime Video":"prime-video.png","Paramount+":"paramount-plus.png",ChatGPT:"chatgpt.png",Claude:"claude.png",Gemini:"gemini.png","Server Boosts":"discord.png","Real Members":"discord.png",TikTok:"tiktok.png",Instagram:"instagram.png",YouTube:"youtube.png",Fortnite:"fortnite.png",Valorant:"valorant.png"};
-const q=new URLSearchParams(location.search),p=SARAH_PRODUCTS.find(x=>x.id===q.get("id"));
+const q=new URLSearchParams(location.search),requestedId=q.get("id");
 function makeId(){const d=new Date(),date=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"),b=new Uint8Array(5);crypto.getRandomValues(b);return "SS-"+date+"-"+Array.from(b,x=>x.toString(16).padStart(2,"0")).join("").toUpperCase()}
 const oid=makeId();document.getElementById("order").textContent=oid;
-if(!p){name.textContent="Invalid Product";option.textContent="Return to store";usd.textContent="—"}else{name.textContent=p.name;option.textContent=p.option;usd.textContent="$"+Number(p.price).toFixed(2);productImage.src=IMAGES[p.name]||"sarah-logo.png";productImage.alt=p.name}
-copyOrder.onclick=async()=>{try{await navigator.clipboard.writeText(oid);copyOrder.textContent="COPIED ✓";setTimeout(()=>copyOrder.textContent="COPY",1200)}catch(e){copyOrder.textContent="SELECT"}}
-</script>
+const stockEl=document.getElementById("stock"),ticket=document.getElementById("purchaseTicket");
+
+function showProduct(p){
+ if(!p){
+   name.textContent="Invalid Product";option.textContent="Return to store";usd.textContent="—";stockEl.textContent="—";
+   ticket.style.pointerEvents="none";ticket.style.opacity=".45";return;
+ }
+ name.textContent=p.name;
+ option.textContent=p.option;
+ usd.textContent="$"+Number(p.price).toFixed(2);
+ productImage.src=IMAGES[p.name]||p.image||"sarah-logo.png";
+ productImage.alt=p.name;
+ if(p.stock===null || p.stock===undefined){
+   stockEl.textContent="Checking live stock…";
+ }else if(Number(p.stock)<=0){
+   stockEl.textContent="OUT OF STOCK";
+   stockEl.style.color="#d17777";
+   ticket.textContent="Out of Stock";
+   ticket.style.pointerEvents="none";
+   ticket.style.opacity=".5";
+ }else{
+   stockEl.textContent=`${p.stock} available`;
+   stockEl.style.color="var(--cyan)";
+ }
+}
+
+const fallback=(window.SARAH_PRODUCTS||[]).find(x=>x.id===requestedId);
+showProduct(fallback?{...fallback,stock:null}:null);
+
+(async()=>{
+ try{
+   const live=await SARAH_DB.loadProducts();
+   const p=live.find(x=>x.id===requestedId);
+   if(p) showProduct(p);
+   else if(!fallback) showProduct(null);
+ }catch(e){
+   console.error(e);
+   if(fallback) stockEl.textContent="Live stock unavailable — confirm in ticket";
+ }
+})();
+
+copyOrder.onclick=async()=>{try{await navigator.clipboard.writeText(oid);copyOrder.textContent="COPIED ✓";setTimeout(()=>copyOrder.textContent="COPY",1200)}catch(e){copyOrder.textContent="SELECT"}}</script>
 </body></html>

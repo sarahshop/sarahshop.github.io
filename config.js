@@ -1,6 +1,6 @@
 window.SARAH_SHOP_CONFIG = {
   storeName: "Sarah Shop",
-  discordInvite: "https://discord.gg/AEdJtcKwVB",
-  // PUBLIC address only. Never put a seed phrase/private key here.
-  litecoinAddress: "LfstbQZzaNx6A7PqvMQbZ2Ff8HVBdtkaf3"
+  discordInvite: "https://discord.gg/rAQcaKJSF8",
+  supabaseUrl: "https://yfpareyuyfoobugnsmcz.supabase.co",
+  supabasePublishableKey: "sb_publishable_ncEOXKJ2vS1Md-zTBx3pPw_BSkTXMiD"
 };
