@@ -15,13 +15,32 @@
   --w:#f7fbff;--m:#768ba0;--l:rgba(83,198,255,.15);--green:#78ffae;--gold:#ffc56d
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:110px}
 body{
   margin:0;min-height:100vh;color:var(--w);font-family:Manrope,sans-serif;
   background:radial-gradient(circle at 50% -10%,rgba(0,183,255,.14),transparent 28%),
   linear-gradient(#02040a,#030812 55%,#02040a)
 }
 a{color:inherit}.wrap{width:min(94%,1500px);margin:auto}
+
+button,a,.product,.modal-card,.modal-shell,.category-panel,.hero,.banner,.glass-search{
+  transition:
+    transform .22s ease,
+    opacity .22s ease,
+    border-color .22s ease,
+    background .22s ease,
+    box-shadow .22s ease,
+    filter .22s ease;
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    scroll-behavior:auto !important;
+    transition:none !important;
+    animation:none !important;
+  }
+}
+
 .grid{position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(61,183,255,.024) 1px,transparent 1px),linear-gradient(90deg,rgba(61,183,255,.024) 1px,transparent 1px);background-size:48px 48px}
 .nav{
   width:min(94%,1500px);margin:16px auto;padding:14px 16px;border:1px solid var(--l);
@@ -60,7 +79,7 @@ h1{font-family:Orbitron;font-size:clamp(38px,5vw,68px);line-height:.92;margin:0}
   color:#6e8499;font-weight:800;cursor:pointer
 }
 .tab.active,.tab:hover{background:linear-gradient(135deg,var(--c),var(--b));color:#001018}
-.products{display:none}
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;padding-bottom:90px}
 .product{
   position:relative;overflow:hidden;border:1px solid var(--l);border-radius:20px;
   background:linear-gradient(145deg,#091522,#05101a);padding:19px;transition:.2s ease
@@ -128,6 +147,155 @@ h1{font-family:Orbitron;font-size:clamp(38px,5vw,68px);line-height:.92;margin:0}
   color:#526c81;font-size:8px;line-height:1.5
 }
 .hidden{display:none}
+
+.hero-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.glass-search{
+  margin:18px 0 14px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:10px;
+  min-height:54px;
+  padding:0 12px 0 15px;
+  border:1px solid rgba(132,218,255,.18);
+  border-radius:16px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.065),rgba(255,255,255,.025)),
+    rgba(3,10,18,.46);
+  backdrop-filter:blur(20px) saturate(135%);
+  -webkit-backdrop-filter:blur(20px) saturate(135%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 14px 45px rgba(0,0,0,.18);
+}
+.glass-search:focus-within{
+  border-color:rgba(114,234,255,.38);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 0 0 3px rgba(0,183,255,.07),
+    0 18px 55px rgba(0,0,0,.22);
+  transform:translateY(-1px);
+}
+.search-icon{
+  color:var(--c);
+  font-size:22px;
+  line-height:1;
+  opacity:.9;
+}
+.glass-search input{
+  width:100%;
+  min-width:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#e9f7ff;
+  font:inherit;
+  font-size:12px;
+}
+.glass-search input::placeholder{color:#587187}
+.glass-search button{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  border:1px solid rgba(83,198,255,.12);
+  background:rgba(5,15,25,.54);
+  color:#72899b;
+  cursor:pointer;
+}
+.glass-search button:hover{
+  color:#001018;
+  background:linear-gradient(135deg,var(--c),var(--b));
+}
+.search-results{
+  display:none;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:14px;
+}
+.search-results.show{display:grid}
+.search-hit{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 12px;
+  border-radius:12px;
+  border:1px solid rgba(83,198,255,.10);
+  background:rgba(5,15,25,.62);
+  color:#8ba0b2;
+  font-size:10px;
+  cursor:pointer;
+}
+.search-hit:hover{
+  border-color:rgba(83,198,255,.26);
+  background:rgba(8,24,39,.78);
+  transform:translateY(-1px);
+}
+.search-hit strong{color:#d9ecf8}
+.search-hit span{color:var(--c);font-size:9px;font-weight:900}
+.search-empty{
+  grid-column:1/-1;
+  padding:12px;
+  border:1px dashed rgba(83,198,255,.12);
+  border-radius:12px;
+  color:#61798d;
+  font-size:10px;
+}
+.all-products-section{
+  margin-top:10px;
+  padding-top:8px;
+}
+.all-products-head{
+  margin-bottom:18px;
+  padding:20px;
+  border:1px solid var(--l);
+  border-radius:20px;
+  background:linear-gradient(145deg,#091522,#05101a);
+}
+.all-products-head span{
+  color:#4f718e;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:1.4px;
+}
+.all-products-head h2{
+  margin:7px 0 5px;
+  font-family:Orbitron;
+  font-size:clamp(24px,3vw,34px);
+}
+.all-products-head p{
+  margin:0;
+  color:#6f8498;
+  font-size:10px;
+  line-height:1.6;
+}
+.product.reveal{
+  animation:cardReveal .36s ease both;
+}
+@keyframes cardReveal{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.category-modal.show .modal-shell{animation:modalIn .22s ease both}
+.category-modal.show .modal-backdrop{animation:fadeIn .2s ease both}
+@keyframes modalIn{
+  from{opacity:0;transform:translateY(14px) scale(.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+@media(max-width:760px){
+  .search-results{grid-template-columns:1fr}
+  .hero-actions{margin-top:16px}
+}
+
 
 .category-panel{
   margin:58px 0 80px;
@@ -363,7 +531,10 @@ body.modal-open{overflow:hidden}
         views, likes, or followers. Your checkout will require you to confirm the exact order with staff before payment.
       </div>
     </div>
-    <a class="btn primary" href="#products">Browse Products ↓</a>
+    <div class="hero-actions">
+      <button id="browseAllBtn" class="btn primary" type="button">Browse All Products ↓</button>
+      <a class="btn" href="https://discord.gg/AEdJtcKwVB" target="_blank">Open Discord</a>
+    </div>
   </section>
 
   <section class="category-panel">
@@ -372,6 +543,14 @@ body.modal-open{overflow:hidden}
       <h2>Choose a category</h2>
       <p>Click one below to open all products in that category.</p>
     </div>
+
+    <div class="glass-search">
+      <div class="search-icon">⌕</div>
+      <input id="productSearch" type="search" placeholder="Search Netflix, TikTok, Fortnite, ChatGPT..." autocomplete="off">
+      <button id="clearSearch" type="button" aria-label="Clear search">×</button>
+    </div>
+
+    <div id="searchResults" class="search-results" aria-live="polite"></div>
 
     <div class="tabs">
       <button class="tab active" data-cat="all">✦ All Products</button>
@@ -383,7 +562,14 @@ body.modal-open{overflow:hidden}
     </div>
   </section>
 
-  <div id="products" class="products"></div>
+  <section id="allProductsSection" class="all-products-section">
+    <div class="all-products-head">
+      <span>FULL CATALOG</span>
+      <h2>Browse All Products</h2>
+      <p>Every available product in one place. Use the categories above for a faster filtered view.</p>
+    </div>
+    <div id="products" class="products"></div>
+  </section>
 
   <div id="categoryModal" class="category-modal" aria-hidden="true">
     <div class="modal-backdrop" data-close-modal></div>
@@ -651,6 +837,13 @@ const modalTitle = document.getElementById("modalTitle");
 const modalSubtitle = document.getElementById("modalSubtitle");
 const closeModalBtn = document.getElementById("closeModal");
 
+const browseAllBtn = document.getElementById("browseAllBtn");
+const allProductsSection = document.getElementById("allProductsSection");
+const productSearch = document.getElementById("productSearch");
+const clearSearch = document.getElementById("clearSearch");
+const searchResults = document.getElementById("searchResults");
+
+
 const CATEGORY_NAMES = {
   all:"All Products",
   streaming:"Streaming",
@@ -731,6 +924,84 @@ function closeCategory(){
   modal.setAttribute("aria-hidden","true");
   document.body.classList.remove("modal-open");
 }
+
+
+browseAllBtn.addEventListener("click",()=>{
+  allProductsSection.scrollIntoView({behavior:"smooth",block:"start"});
+
+  document.querySelectorAll("#products .product").forEach((card,index)=>{
+    card.classList.remove("reveal");
+    void card.offsetWidth;
+    card.style.animationDelay = `${Math.min(index * 35, 350)}ms`;
+    card.classList.add("reveal");
+  });
+});
+
+function productMatchesSearch(name, items, query){
+  const haystack = [
+    name,
+    ...items.map(item => `${item.option} ${item.price}`)
+  ].join(" ").toLowerCase();
+
+  return haystack.includes(query);
+}
+
+function renderSearchResults(){
+  const query = productSearch.value.trim().toLowerCase();
+  searchResults.innerHTML = "";
+
+  if(!query){
+    searchResults.classList.remove("show");
+    return;
+  }
+
+  const matches = Object.entries(groups)
+    .filter(([key,items])=>{
+      const [,name] = key.split("|");
+      return productMatchesSearch(name,items,query);
+    })
+    .slice(0,8);
+
+  searchResults.classList.add("show");
+
+  if(matches.length === 0){
+    searchResults.innerHTML = `<div class="search-empty">No products found for “${productSearch.value.trim()}”.</div>`;
+    return;
+  }
+
+  for(const [key,items] of matches){
+    const [cat,name] = key.split("|");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "search-hit";
+    button.innerHTML = `<strong>${name}</strong><span>${CATEGORY_NAMES[cat] || cat}</span>`;
+    button.addEventListener("click",()=>{
+      openCategory(cat);
+
+      requestAnimationFrame(()=>{
+        const target = [...modalProducts.querySelectorAll(".modal-card")]
+          .find(card => card.querySelector("h3")?.textContent === name);
+
+        if(target){
+          target.scrollIntoView({behavior:"smooth",block:"center"});
+          target.style.boxShadow = "0 0 0 2px rgba(114,234,255,.34), 0 18px 55px rgba(0,0,0,.28)";
+          setTimeout(()=>target.style.boxShadow="",1200);
+        }
+      });
+    });
+    searchResults.appendChild(button);
+  }
+}
+
+productSearch.addEventListener("input",renderSearchResults);
+
+clearSearch.addEventListener("click",()=>{
+  productSearch.value = "";
+  searchResults.innerHTML = "";
+  searchResults.classList.remove("show");
+  productSearch.focus();
+});
+
 
 document.querySelectorAll(".tab").forEach(tab=>{
   tab.addEventListener("click",()=>openCategory(tab.dataset.cat));
