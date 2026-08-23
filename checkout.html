@@ -320,12 +320,9 @@ nav{
         Open Discord and send staff your Order ID, the product category, and exactly what you want.
       </p>
 
-      <div class="example">
+      <div class="example" id="orderExample">
         <b>Example:</b><br>
-        Order ID: SS-20260822-XXXXXXXXXX<br>
-        Product: TikTok<br>
-        I want: 10,000 views on one video<br>
-        Target/link: your TikTok video link
+        <span id="exampleLines">Loading an example for this product…</span>
       </div>
 
       <div class="actions">
@@ -445,6 +442,93 @@ function makeOrderId() {
 
 const orderId = makeOrderId();
 document.getElementById("orderId").textContent = orderId;
+
+const exampleLines = document.getElementById("exampleLines");
+
+function buildOrderExample(item) {
+  if (!item) {
+    return `Order ID: ${orderId}<br>Tell staff exactly what you want before paying.`;
+  }
+
+  const name = item.name.toLowerCase();
+
+  if (name === "tiktok") {
+    return `Order ID: ${orderId}<br>
+Product: TikTok<br>
+I want: 10,000 views / likes / followers (choose one)<br>
+Target/link: your TikTok profile or video link`;
+  }
+
+  if (name === "instagram") {
+    return `Order ID: ${orderId}<br>
+Product: Instagram<br>
+I want: followers / likes / views (choose one + quantity)<br>
+Target/link: your Instagram profile or post link`;
+  }
+
+  if (name === "youtube") {
+    return `Order ID: ${orderId}<br>
+Product: YouTube<br>
+I want: the exact service + quantity<br>
+Target/link: your YouTube video or channel link`;
+  }
+
+  if (name.includes("server boosts")) {
+    return `Order ID: ${orderId}<br>
+Product: Server Boosts<br>
+I want: the exact number of boosts + duration<br>
+Server: your Discord server invite/link`;
+  }
+
+  if (name.includes("real members")) {
+    return `Order ID: ${orderId}<br>
+Product: Real Members<br>
+I want: the exact member quantity<br>
+Server: your Discord server invite/link`;
+  }
+
+  if (name.includes("aged accounts")) {
+    return `Order ID: ${orderId}<br>
+Product: Aged Accounts<br>
+I want: the account age/type shown on the store<br>
+Extra: confirm any required account details with staff`;
+  }
+
+  if (name.includes("decorations")) {
+    return `Order ID: ${orderId}<br>
+Product: Decorations<br>
+I want: the exact decoration/item<br>
+Extra: describe or link the decoration you want`;
+  }
+
+  if (["chatgpt","claude","gemini"].includes(name)) {
+    return `Order ID: ${orderId}<br>
+Product: ${item.name}<br>
+Plan: ${item.option}<br>
+Confirm: account/service details and delivery method with staff`;
+  }
+
+  if (["netflix","crunchyroll","hbo max","spotify","prime video","paramount+"].includes(name)) {
+    return `Order ID: ${orderId}<br>
+Product: ${item.name}<br>
+Plan: ${item.option}<br>
+Confirm: region, account type, warranty, and delivery details with staff`;
+  }
+
+  if (["fortnite","rainbow six","valorant","minecraft","roblox","rust","apex","steam games accounts","epic games accounts"].includes(name)) {
+    return `Order ID: ${orderId}<br>
+Product: ${item.name}<br>
+Tier: ${item.option}<br>
+Confirm: exact account details/features with staff before paying`;
+  }
+
+  return `Order ID: ${orderId}<br>
+Product: ${item.name}<br>
+Option: ${item.option}<br>
+Tell staff exactly what you expect to receive before paying`;
+}
+
+exampleLines.innerHTML = buildOrderExample(product);
 
 if (!product) {
   document.getElementById("productName").textContent = "Invalid product";
