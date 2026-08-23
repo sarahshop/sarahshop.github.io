@@ -1,110 +1,274 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Checkout — Sarah Shop</title><link rel="icon" href="sarah-logo.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet"><style>
-:root{--c:#72eaff;--b:#0568ff;--w:#f7fbff;--m:#768ba0;--l:rgba(83,198,255,.15)}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,rgba(0,183,255,.14),transparent 28%),linear-gradient(#02040a,#030812 55%,#02040a);color:var(--w);font-family:Manrope,sans-serif}.wrap{width:min(94%,1100px);margin:auto}.nav{margin:16px auto;padding:14px 16px;border:1px solid var(--l);border-radius:20px;background:#07111c;display:flex;justify-content:space-between;align-items:center}.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}.brand img{width:46px;height:46px;border-radius:14px}.brand b,h1,h2,.amt{font-family:Orbitron}.btn{padding:11px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--l);background:#091522;color:#9eb0c2;font-size:11px;font-weight:800}.btn.primary{background:linear-gradient(135deg,var(--c),var(--b));color:#001018;border:none}.grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:16px;margin:50px auto 100px}.card{border:1px solid var(--l);border-radius:20px;background:linear-gradient(145deg,#091522,#05101a);padding:28px}.label{color:#4f718e;font-size:8px;font-weight:800;letter-spacing:1px;margin-top:22px}.value{margin-top:5px}.total,.amt{font-size:38px;color:var(--c);margin-top:7px}.status,.paybox{margin-top:18px;padding:14px;border:1px solid var(--l);border-radius:12px;background:#06101a;color:#8194a7;font-size:11px;line-height:1.6}.paybox{display:none}.paybox.show{display:block}.address{word-break:break-all;margin-top:8px;color:#b6c3ce}.warn{color:#d0a66f;margin-top:14px;font-size:10px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}button{font:inherit}@media(max-width:800px){.grid{grid-template-columns:1fr}}
-</style></head><body><nav class="nav wrap"><a class="brand" href="index.html"><img src="sarah-logo.png"><b>SARAH SHOP</b></a><a class="btn" href="index.html">← Store</a></nav><main class="wrap grid"><section class="card"><h1>Order</h1><div class="label">PRODUCT</div><div id="name" class="value">—</div><div class="label">OPTION</div><div id="option" class="value">—</div><div class="label">TOTAL</div><div id="usd" class="total">$0.00</div><div class="label">ORDER ID</div><div id="order" class="value">—</div><div class="status">By continuing you agree to the <a href="tos.html">Terms of Service</a>.</div></section><section class="card"><h2>Pay with Litecoin</h2><p style="color:var(--m);font-size:12px;line-height:1.7">The site loads a live LTC/USD price. If the live quote fails, checkout stops instead of guessing.</p><div id="status" class="status">Preparing checkout…</div><div id="paybox" class="paybox"><div class="label">SEND EXACTLY</div><div id="ltc" class="amt">— LTC</div><div class="label">PUBLIC LTC ADDRESS</div><div id="address" class="address">—</div><div class="actions"><a id="wallet" class="btn primary" href="#">Open Litecoin Wallet</a><button id="sent" class="btn" type="button">Check Payment</button></div><div class="warn">Send the exact Litecoin amount shown above. Payment verification is automatic. After confirmation, you’ll be sent to the next step. Never share a seed phrase/private key.</div></div></section></main><script src="config.js"></script><script src="products.js"></script><script>
-const API = "https://ticket-bot-production-400b.up.railway.app";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout — Sarah Shop</title>
+<link rel="icon" href="sarah-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --c:#72eaff;
+  --b:#0568ff;
+  --w:#f7fbff;
+  --m:#768ba0;
+  --l:rgba(83,198,255,.15);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(0,183,255,.14),transparent 28%),
+    linear-gradient(#02040a,#030812 55%,#02040a);
+  color:var(--w);
+  font-family:Manrope,sans-serif;
+}
+.wrap{width:min(94%,1100px);margin:auto}
+.nav{
+  margin:16px auto;
+  padding:14px 16px;
+  border:1px solid var(--l);
+  border-radius:20px;
+  background:rgba(7,17,28,.9);
+  backdrop-filter:blur(16px);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  text-decoration:none;
+  color:inherit;
+}
+.brand img{width:46px;height:46px;border-radius:14px}
+.brand b,h1,h2{font-family:Orbitron}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 15px;
+  border-radius:11px;
+  text-decoration:none;
+  border:1px solid var(--l);
+  background:#091522;
+  color:#9eb0c2;
+  font-size:11px;
+  font-weight:800;
+  transition:.2s ease;
+}
+.btn:hover{transform:translateY(-2px);border-color:rgba(114,234,255,.38)}
+.btn.primary{
+  background:linear-gradient(135deg,var(--c),var(--b));
+  color:#001018;
+  border:none;
+  box-shadow:0 10px 32px rgba(5,104,255,.18);
+}
+.grid{
+  display:grid;
+  grid-template-columns:.9fr 1.1fr;
+  gap:16px;
+  margin:50px auto 100px;
+}
+.card{
+  border:1px solid var(--l);
+  border-radius:22px;
+  background:linear-gradient(145deg,#091522,#05101a);
+  padding:30px;
+  box-shadow:0 24px 70px rgba(0,0,0,.18);
+}
+.label{
+  color:#4f718e;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-top:22px;
+}
+.value{margin-top:5px}
+.total{
+  font-family:Orbitron;
+  font-size:38px;
+  color:var(--c);
+  margin-top:7px;
+}
+.status{
+  margin-top:22px;
+  padding:15px;
+  border:1px solid var(--l);
+  border-radius:12px;
+  background:#06101a;
+  color:#8194a7;
+  font-size:11px;
+  line-height:1.65;
+}
+.purchase-card{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-height:430px;
+}
+.purchase-card h2{
+  margin:0 0 10px;
+  font-size:30px;
+}
+.purchase-card p{
+  color:var(--m);
+  font-size:12px;
+  line-height:1.75;
+  margin:0;
+  max-width:560px;
+}
+.step{
+  margin-top:22px;
+  padding:16px;
+  border:1px solid var(--l);
+  border-radius:14px;
+  background:#06101a;
+}
+.step small{
+  color:var(--c);
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:1.2px;
+}
+.step b{
+  display:block;
+  margin-top:6px;
+  font-size:13px;
+}
+.step p{
+  margin-top:5px;
+  font-size:10px;
+}
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+.actions .primary{
+  min-width:190px;
+  font-size:12px;
+}
+.note{
+  margin-top:15px;
+  color:#587188;
+  font-size:9px;
+  line-height:1.6;
+}
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr;margin-top:25px}
+  .purchase-card{min-height:auto}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav wrap">
+  <a class="brand" href="index.html">
+    <img src="sarah-logo.png" alt="Sarah Shop">
+    <b>SARAH SHOP</b>
+  </a>
+  <a class="btn" href="index.html">← Store</a>
+</nav>
+
+<main class="wrap grid">
+
+<section class="card">
+  <h1>Order Review</h1>
+
+  <div class="label">PRODUCT</div>
+  <div id="name" class="value">—</div>
+
+  <div class="label">OPTION</div>
+  <div id="option" class="value">—</div>
+
+  <div class="label">PRICE</div>
+  <div id="usd" class="total">$0.00</div>
+
+  <div class="label">ORDER ID</div>
+  <div id="order" class="value">—</div>
+
+  <div class="status">
+    Review your product and option, then open a Purchase Ticket in Discord.
+    Staff will confirm the exact order and payment details with you there.
+  </div>
+</section>
+
+<section class="card purchase-card">
+  <h2>Purchase on Discord</h2>
+  <p>
+    Your order is ready to continue. Open a Purchase Ticket and send staff
+    your Order ID, product, and option so they know exactly what you selected.
+  </p>
+
+  <div class="step">
+    <small>STEP 1</small>
+    <b>Open a Purchase Ticket</b>
+    <p>Use the button below to join/open Sarah Shop Discord.</p>
+  </div>
+
+  <div class="step">
+    <small>STEP 2</small>
+    <b>Send your Order ID</b>
+    <p>Staff will confirm the exact product, price, and delivery details before payment.</p>
+  </div>
+
+  <div class="actions">
+    <a class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank" rel="noopener">
+      Purchase Ticket →
+    </a>
+    <a class="btn" href="index.html">Keep Browsing</a>
+  </div>
+
+  <div class="note">
+    Do not send payment until staff confirms the exact order in your Purchase Ticket.
+  </div>
+</section>
+
+</main>
+
+<script src="products.js"></script>
+<script>
 const q = new URLSearchParams(location.search);
 const p = SARAH_PRODUCTS.find(x => x.id === q.get("id"));
-const status = document.getElementById("status");
-const paybox = document.getElementById("paybox");
-const sent = document.getElementById("sent");
 
-let currentOrder = null;
-let pollTimer = null;
+function makeOrderId(){
+  const now = new Date();
+  const date =
+    now.getFullYear().toString() +
+    String(now.getMonth()+1).padStart(2,"0") +
+    String(now.getDate()).padStart(2,"0");
 
-function setStatus(message) {
-  status.textContent = message;
+  const bytes = new Uint8Array(5);
+  crypto.getRandomValues(bytes);
+
+  const random = Array.from(bytes)
+    .map(b => b.toString(16).padStart(2,"0"))
+    .join("")
+    .toUpperCase();
+
+  return `SS-${date}-${random}`;
 }
 
-async function checkPayment() {
-  if (!currentOrder) return;
+const orderId = makeOrderId();
+document.getElementById("order").textContent = orderId;
 
-  try {
-    setStatus("Checking the Litecoin blockchain…");
-    const r = await fetch(`${API}/api/orders/${encodeURIComponent(currentOrder.order_id)}`, {cache:"no-store"});
-    const d = await r.json();
-
-    if (!r.ok || !d.ok) throw new Error(d.error || "Could not check payment.");
-
-    const o = d.order;
-
-    if (o.status === "verified") {
-      clearInterval(pollTimer);
-      setStatus("Payment verified! Redirecting…");
-
-      const u = new URLSearchParams({
-        order:o.order_id,
-        product:o.product_name,
-        option:o.option,
-        usd:Number(o.usd_price).toFixed(2),
-        txid:o.txid || ""
-      });
-
-      setTimeout(() => location.href = "success.html?" + u.toString(), 900);
-      return;
-    }
-
-    if (o.status === "detected") {
-      setStatus(`Payment detected! Waiting for confirmation… (${o.confirmations || 0}/1)`);
-      return;
-    }
-
-    if (o.status === "expired") {
-      clearInterval(pollTimer);
-      setStatus("This checkout expired. Return to the store and create a new order.");
-      sent.disabled = true;
-      return;
-    }
-
-    setStatus("Waiting for your Litecoin payment…");
-  } catch (e) {
-    setStatus("Could not check payment right now. We’ll keep trying.");
-  }
-}
-
-async function createOrder() {
-  if (!p) {
-    setStatus("Invalid product link.");
-    sent.disabled = true;
-    return;
-  }
-
+if(!p){
+  document.getElementById("name").textContent = "Invalid product";
+  document.getElementById("option").textContent = "Return to store";
+  document.getElementById("usd").textContent = "—";
+}else{
   document.getElementById("name").textContent = p.name;
   document.getElementById("option").textContent = p.option;
-  document.getElementById("usd").textContent = "$" + p.price.toFixed(2);
-
-  try {
-    setStatus("Creating secure Litecoin checkout…");
-
-    const r = await fetch(`${API}/api/orders`, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        product_id:p.id,
-        product_name:p.name,
-        option:p.option,
-        usd_price:p.price
-      })
-    });
-
-    const d = await r.json();
-    if (!r.ok || !d.ok) throw new Error(d.error || "Checkout could not be created.");
-
-    currentOrder = d.order;
-
-    document.getElementById("order").textContent = currentOrder.order_id;
-    document.getElementById("ltc").textContent = currentOrder.expected_ltc + " LTC";
-    document.getElementById("address").textContent = currentOrder.payment_address;
-    document.getElementById("wallet").href =
-      `litecoin:${currentOrder.payment_address}?amount=${currentOrder.expected_ltc}&label=${encodeURIComponent("Sarah Shop " + currentOrder.order_id)}`;
-
-    paybox.classList.add("show");
-    setStatus("Waiting for your Litecoin payment…");
-    pollTimer = setInterval(checkPayment, 12000);
-  } catch (e) {
-    setStatus(e.message || "Checkout could not be created.");
-  }
+  document.getElementById("usd").textContent = "$" + Number(p.price).toFixed(2);
 }
+</script>
 
-sent.onclick = checkPayment;
-createOrder();
-</script></body></html>
+</body>
+</html>
