@@ -73,137 +73,183 @@
       <div class="step"><span class="step-num">4</span><b>Pay & receive</b><p>Payment and final delivery are handled in the Purchase Ticket.</p></div>
     </div>
     <div class="actions"><a id="purchaseTicket" class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank">Open Purchase Ticket →</a><a class="btn" href="index.html">Keep Browsing</a></div>
-    <div class="note">Do not send payment until the exact order has been confirmed in the ticket.</div>
+    <div class="note" id="orderSaveStatus">Do not send payment until the exact order has been confirmed in the ticket.</div>
   </section>
 </main>
 
 <script src="config.js"></script><script src="products.js"></script><script src="supabase-products.js"></script><script src="ui.js"></script>
 <script>
 const IMAGES={Netflix:"netflix.png",Crunchyroll:"crunchyroll.png","HBO Max":"hbo-max.png",Spotify:"spotify.png","Prime Video":"prime-video.png","Paramount+":"paramount-plus.png",ChatGPT:"chatgpt.png",Claude:"claude.png",Gemini:"gemini.png","Server Boosts":"discord.png","Real Members":"discord.png",TikTok:"tiktok.png",Instagram:"instagram.png",YouTube:"youtube.png",Fortnite:"fortnite.png",Valorant:"valorant.png"};
-const q=new URLSearchParams(location.search),requestedId=q.get("id");
-function makeId(){const d=new Date(),date=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"),b=new Uint8Array(5);crypto.getRandomValues(b);return "SS-"+date+"-"+Array.from(b,x=>x.toString(16).padStart(2,"0")).join("").toUpperCase()}
-const oid=makeId();document.getElementById("order").textContent=oid;
+
+const q=new URLSearchParams(location.search);
+const requestedId=q.get("id");
+
+const nameEl=document.getElementById("name");
+const optionEl=document.getElementById("option");
+const usdEl=document.getElementById("usd");
+const productImage=document.getElementById("productImage");
 const stockEl=document.getElementById("stock");
+const orderEl=document.getElementById("order");
+const copyOrder=document.getElementById("copyOrder");
 const ticket=document.getElementById("purchaseTicket");
 const saveStatus=document.getElementById("orderSaveStatus");
 const discordUsername=document.getElementById("discordUsername");
 const discordError=document.getElementById("discordError");
+
+function makeId(){
+  const d=new Date();
+  const date=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+  const b=new Uint8Array(5);
+  crypto.getRandomValues(b);
+  return "SS-"+date+"-"+Array.from(b,x=>x.toString(16).padStart(2,"0")).join("").toUpperCase();
+}
+
+const oid=makeId();
+orderEl.textContent=oid;
+
 let selectedProduct=null;
 let orderSaved=false;
 let savingOrder=false;
 
 function showProduct(p){
- selectedProduct=p||null;
- if(!p){
-   name.textContent="Invalid Product";option.textContent="Return to store";usd.textContent="—";stockEl.textContent="—";
-   ticket.style.pointerEvents="none";ticket.style.opacity=".45";return;
- }
- name.textContent=p.name;
- option.textContent=p.option;
- usd.textContent="$"+Number(p.price).toFixed(2);
- productImage.src=IMAGES[p.name]||p.image||"sarah-logo.png";
- productImage.alt=p.name;
- if(p.stock===null || p.stock===undefined){
-   stockEl.textContent="Checking live stock…";
- }else if(Number(p.stock)<=0){
-   stockEl.textContent="OUT OF STOCK";
-   stockEl.style.color="#d17777";
-   ticket.textContent="Out of Stock";
-   ticket.style.pointerEvents="none";
-   ticket.style.opacity=".5";
- }else{
-   stockEl.textContent=`${p.stock} available`;
-   stockEl.style.color="var(--cyan)";
- }
+  selectedProduct=p||null;
+  if(!p){
+    nameEl.textContent="Invalid Product";
+    optionEl.textContent="Return to store";
+    usdEl.textContent="—";
+    stockEl.textContent="—";
+    ticket.style.pointerEvents="none";
+    ticket.style.opacity=".45";
+    return;
+  }
+
+  nameEl.textContent=p.name;
+  optionEl.textContent=p.option;
+  usdEl.textContent="$"+Number(p.price).toFixed(2);
+  productImage.src=IMAGES[p.name]||p.image||"sarah-logo.png";
+  productImage.alt=p.name;
+
+  if(p.stock===null || p.stock===undefined){
+    stockEl.textContent="Checking live stock…";
+    stockEl.style.color="";
+  }else if(Number(p.stock)<=0){
+    stockEl.textContent="OUT OF STOCK";
+    stockEl.style.color="#d17777";
+    ticket.textContent="Out of Stock";
+    ticket.style.pointerEvents="none";
+    ticket.style.opacity=".5";
+  }else{
+    stockEl.textContent=`${p.stock} available`;
+    stockEl.style.color="var(--cyan)";
+    ticket.textContent="Open Purchase Ticket →";
+    ticket.style.pointerEvents="";
+    ticket.style.opacity="";
+  }
 }
 
 const fallback=(window.SARAH_PRODUCTS||[]).find(x=>x.id===requestedId);
 showProduct(fallback?{...fallback,stock:null}:null);
 
 (async()=>{
- try{
-   const live=await SARAH_DB.loadProducts();
-   const p=live.find(x=>x.id===requestedId);
-   if(p) showProduct(p);
-   else if(!fallback) showProduct(null);
- }catch(e){
-   console.error(e);
-   if(fallback) stockEl.textContent="Live stock unavailable — confirm in ticket";
- }
+  try{
+    const live=await SARAH_DB.loadProducts();
+    const p=live.find(x=>x.id===requestedId);
+    if(p) showProduct(p);
+    else if(!fallback) showProduct(null);
+  }catch(e){
+    console.error("Live product load failed:",e);
+    if(fallback) stockEl.textContent="Live stock unavailable — confirm in ticket";
+  }
 })();
 
 async function saveOrderToSupabase(){
   if(orderSaved) return true;
   if(savingOrder) return false;
   if(!selectedProduct) throw new Error("Product is not loaded yet.");
+
   const username=discordUsername.value.trim();
   if(!username){
     discordError.style.display="block";
     discordUsername.focus();
     throw new Error("Discord username is required.");
   }
+
   discordError.style.display="none";
-
   savingOrder=true;
-  saveStatus.textContent="Saving Order ID…";
+  ticket.style.pointerEvents="none";
+  ticket.style.opacity=".65";
+  ticket.textContent="Saving Order…";
+  saveStatus.textContent="Saving your Order ID…";
 
-  const C=window.SARAH_SHOP_CONFIG||{};
-  const url=C.supabaseUrl;
-  const key=C.supabasePublishableKey;
+  try{
+    const C=window.SARAH_SHOP_CONFIG||{};
+    const url=C.supabaseUrl;
+    const key=C.supabasePublishableKey;
 
-  if(!url||!key){
+    if(!url||!key) throw new Error("Supabase configuration is missing.");
+
+    const payload={
+      invoice_id:oid,
+      product_id:selectedProduct.db_id ?? null,
+      product_name:selectedProduct.name,
+      option_name:selectedProduct.option || null,
+      price:Number(selectedProduct.price),
+      quantity:1,
+      status:"pending",
+      discord_username:username
+    };
+
+    const r=await fetch(`${url}/rest/v1/orders`,{
+      method:"POST",
+      headers:{
+        "apikey":key,
+        "Authorization":`Bearer ${key}`,
+        "Content-Type":"application/json",
+        "Prefer":"return=minimal"
+      },
+      body:JSON.stringify(payload)
+    });
+
+    if(!r.ok){
+      const msg=await r.text().catch(()=> "");
+      throw new Error(`Order save failed (${r.status}). ${msg}`);
+    }
+
+    orderSaved=true;
+    saveStatus.textContent="Order saved ✓ Your Order ID is ready for the Purchase Ticket.";
+    ticket.textContent="Open Purchase Ticket →";
+    ticket.style.pointerEvents="";
+    ticket.style.opacity="";
+    return true;
+  }finally{
     savingOrder=false;
-    throw new Error("Supabase configuration is missing.");
+    if(!orderSaved){
+      ticket.textContent="Open Purchase Ticket →";
+      ticket.style.pointerEvents="";
+      ticket.style.opacity="";
+    }
   }
-
-  const payload={
-    invoice_id:oid,
-    product_id:selectedProduct.db_id ?? null,
-    product_name:selectedProduct.name,
-    option_name:selectedProduct.option || null,
-    price:Number(selectedProduct.price),
-    quantity:1,
-    status:"pending",
-    discord_username:username
-  };
-
-  const r=await fetch(`${url}/rest/v1/orders`,{
-    method:"POST",
-    headers:{
-      "apikey":key,
-      "Authorization":`Bearer ${key}`,
-      "Content-Type":"application/json",
-      "Prefer":"return=minimal"
-    },
-    body:JSON.stringify(payload)
-  });
-
-  savingOrder=false;
-
-  if(!r.ok){
-    const msg=await r.text().catch(()=> "");
-    throw new Error(`Order save failed (${r.status}). ${msg}`);
-  }
-
-  orderSaved=true;
-  saveStatus.textContent="Order ID saved ✓ Open Discord and paste this Order ID in your Purchase Ticket.";
-  return true;
 }
 
-discordUsername.addEventListener("input",()=>{if(discordUsername.value.trim())discordError.style.display="none"});
+discordUsername.addEventListener("input",()=>{
+  if(discordUsername.value.trim()) discordError.style.display="none";
+});
 
 ticket.addEventListener("click",async e=>{
-  if(orderSaved) return;
   e.preventDefault();
-
   const target=ticket.href;
+
+  if(orderSaved){
+    window.open(target,"_blank","noopener");
+    return;
+  }
 
   try{
     await saveOrderToSupabase();
     window.open(target,"_blank","noopener");
   }catch(err){
-    console.error(err);
-    saveStatus.textContent="Could not save the Order ID yet. Try the Purchase Ticket button again.";
+    console.error("ORDER SAVE ERROR:",err);
+    saveStatus.textContent="Could not save order: "+err.message;
   }
 });
 
@@ -211,9 +257,9 @@ copyOrder.onclick=async()=>{
   try{
     await navigator.clipboard.writeText(oid);
     copyOrder.textContent="COPIED ✓";
-    setTimeout(()=>copyOrder.textContent="COPY",1200)
+    setTimeout(()=>copyOrder.textContent="COPY",1200);
   }catch(e){
-    copyOrder.textContent="SELECT"
+    copyOrder.textContent="SELECT";
   }
-}</script>
+};</script>
 </body></html>
