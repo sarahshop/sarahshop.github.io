@@ -256,6 +256,83 @@ nav{
   line-height:1.65
 }
 .good{color:var(--green)}
+
+.copy-line{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-top:8px;
+}
+.copy-line .value,
+.copy-line .amount,
+.copy-line .address{
+  margin-top:0;
+  flex:1;
+  min-width:0;
+}
+.copy-btn{
+  min-height:38px;
+  padding:0 12px;
+  border-radius:9px;
+  border:1px solid rgba(83,198,255,.18);
+  background:rgba(0,183,255,.08);
+  color:var(--cyan);
+  font-size:9px;
+  font-weight:900;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.copy-btn:hover{
+  background:linear-gradient(135deg,var(--cyan),var(--deep));
+  color:#001018;
+}
+.copy-btn.copied{
+  background:rgba(127,255,178,.10);
+  color:var(--green);
+  border-color:rgba(127,255,178,.20);
+}
+.qr-card{
+  margin-top:16px;
+  padding:16px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:#030910;
+  text-align:center;
+}
+.qr-card h4{
+  font-family:"Orbitron",sans-serif;
+  font-size:13px;
+}
+.qr-card p{
+  margin:7px auto 0;
+  max-width:420px;
+  color:#71869a;
+  font-size:9px;
+  line-height:1.55;
+}
+#ltcQr{
+  width:220px;
+  min-height:220px;
+  margin:14px auto 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px;
+  background:white;
+  padding:10px;
+}
+#ltcQr img,
+#ltcQr canvas{
+  max-width:100%;
+  height:auto !important;
+  display:block;
+}
+@media(max-width:520px){
+  .copy-line{align-items:stretch;flex-direction:column}
+  .copy-btn{width:100%}
+  #ltcQr{width:min(220px,100%)}
+}
+
 @media(max-width:850px){
   .checkout{grid-template-columns:1fr}
 }
@@ -296,7 +373,10 @@ nav{
     <div id="usdTotal" class="total">$0.00</div>
 
     <div class="label">ORDER ID</div>
-    <div id="orderId" class="value orderid">—</div>
+    <div class="copy-line">
+      <div id="orderId" class="value orderid">—</div>
+      <button id="copyOrderBtn" class="copy-btn" type="button">Copy Order ID</button>
+    </div>
 
     <div class="notice">
       <b>Do not pay yet.</b><br>
@@ -381,10 +461,22 @@ nav{
 
       <div id="payDetails" style="display:none">
         <div class="label">SEND EXACTLY</div>
-        <div id="ltcAmount" class="amount">— LTC</div>
+        <div class="copy-line">
+          <div id="ltcAmount" class="amount">— LTC</div>
+          <button id="copyAmountBtn" class="copy-btn" type="button">Copy Amount</button>
+        </div>
 
         <div class="label">TO THIS PUBLIC LTC ADDRESS</div>
-        <div id="ltcAddress" class="address">—</div>
+        <div class="copy-line">
+          <div id="ltcAddress" class="address">—</div>
+          <button id="copyAddressBtn" class="copy-btn" type="button">Copy Address</button>
+        </div>
+
+        <div class="qr-card">
+          <h4>Scan with a Litecoin wallet</h4>
+          <p>The QR includes the confirmed LTC address and exact payment amount.</p>
+          <div id="ltcQr" aria-label="Litecoin payment QR code"></div>
+        </div>
 
         <div class="actions">
           <a id="walletLink" class="btn primary" href="#">
@@ -405,6 +497,7 @@ nav{
 
 </main>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="config.js"></script>
 <script src="products.js"></script>
 
@@ -419,6 +512,67 @@ const unlockBtn = document.getElementById("unlockBtn");
 const payment = document.getElementById("payment");
 const statusEl = document.getElementById("status");
 const payDetails = document.getElementById("payDetails");
+
+
+const copyOrderBtn = document.getElementById("copyOrderBtn");
+const copyAmountBtn = document.getElementById("copyAmountBtn");
+const copyAddressBtn = document.getElementById("copyAddressBtn");
+const ltcQr = document.getElementById("ltcQr");
+
+async function copyText(text, button, originalLabel) {
+  if (!text || text === "—") return;
+
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (error) {
+    const temp = document.createElement("textarea");
+    temp.value = text;
+    temp.setAttribute("readonly", "");
+    temp.style.position = "absolute";
+    temp.style.left = "-9999px";
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    temp.remove();
+  }
+
+  button.textContent = "Copied ✓";
+  button.classList.add("copied");
+
+  setTimeout(() => {
+    button.textContent = originalLabel;
+    button.classList.remove("copied");
+  }, 1500);
+}
+
+copyOrderBtn.addEventListener("click", () => {
+  copyText(orderId, copyOrderBtn, "Copy Order ID");
+});
+
+copyAmountBtn.addEventListener("click", () => {
+  const rawAmount = document.getElementById("ltcAmount").textContent.replace(" LTC", "").trim();
+  copyText(rawAmount, copyAmountBtn, "Copy Amount");
+});
+
+copyAddressBtn.addEventListener("click", () => {
+  copyText(document.getElementById("ltcAddress").textContent.trim(), copyAddressBtn, "Copy Address");
+});
+
+function renderLitecoinQr(paymentUri) {
+  ltcQr.innerHTML = "";
+
+  if (typeof QRCode === "undefined") {
+    ltcQr.innerHTML = '<span style="color:#111;font-size:11px">QR library failed to load.</span>';
+    return;
+  }
+
+  new QRCode(ltcQr, {
+    text: paymentUri,
+    width: 200,
+    height: 200,
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
 
 function makeOrderId() {
   const now = new Date();
@@ -592,8 +746,11 @@ async function loadLitecoinCheckout() {
     document.getElementById("ltcAmount").textContent = ltcAmount + " LTC";
     document.getElementById("ltcAddress").textContent = address;
 
-    document.getElementById("walletLink").href =
+    const paymentUri =
       `litecoin:${address}?amount=${ltcAmount}&label=${encodeURIComponent("Sarah Shop " + orderId)}`;
+
+    document.getElementById("walletLink").href = paymentUri;
+    renderLitecoinQr(paymentUri);
 
     statusEl.innerHTML =
       `<span class="good">Order confirmation complete.</span> Live rate loaded: 1 LTC ≈ $${ltcUsd.toFixed(2)} USD`;
