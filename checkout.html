@@ -77,9 +77,15 @@ const IMAGES={Netflix:"netflix.png",Crunchyroll:"crunchyroll.png","HBO Max":"hbo
 const q=new URLSearchParams(location.search),requestedId=q.get("id");
 function makeId(){const d=new Date(),date=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"),b=new Uint8Array(5);crypto.getRandomValues(b);return "SS-"+date+"-"+Array.from(b,x=>x.toString(16).padStart(2,"0")).join("").toUpperCase()}
 const oid=makeId();document.getElementById("order").textContent=oid;
-const stockEl=document.getElementById("stock"),ticket=document.getElementById("purchaseTicket");
+const stockEl=document.getElementById("stock");
+const ticket=document.getElementById("purchaseTicket");
+const saveStatus=document.getElementById("orderSaveStatus");
+let selectedProduct=null;
+let orderSaved=false;
+let savingOrder=false;
 
 function showProduct(p){
+ selectedProduct=p||null;
  if(!p){
    name.textContent="Invalid Product";option.textContent="Return to store";usd.textContent="—";stockEl.textContent="—";
    ticket.style.pointerEvents="none";ticket.style.opacity=".45";return;
@@ -118,5 +124,78 @@ showProduct(fallback?{...fallback,stock:null}:null);
  }
 })();
 
-copyOrder.onclick=async()=>{try{await navigator.clipboard.writeText(oid);copyOrder.textContent="COPIED ✓";setTimeout(()=>copyOrder.textContent="COPY",1200)}catch(e){copyOrder.textContent="SELECT"}}</script>
+async function saveOrderToSupabase(){
+  if(orderSaved) return true;
+  if(savingOrder) return false;
+  if(!selectedProduct) throw new Error("Product is not loaded yet.");
+
+  savingOrder=true;
+  saveStatus.textContent="Saving Order ID…";
+
+  const C=window.SARAH_SHOP_CONFIG||{};
+  const url=C.supabaseUrl;
+  const key=C.supabasePublishableKey;
+
+  if(!url||!key){
+    savingOrder=false;
+    throw new Error("Supabase configuration is missing.");
+  }
+
+  const payload={
+    invoice_id:oid,
+    product_id:selectedProduct.db_id ?? null,
+    product_name:selectedProduct.name,
+    option_name:selectedProduct.option || null,
+    price:Number(selectedProduct.price),
+    quantity:1,
+    status:"pending"
+  };
+
+  const r=await fetch(`${url}/rest/v1/orders`,{
+    method:"POST",
+    headers:{
+      "apikey":key,
+      "Authorization":`Bearer ${key}`,
+      "Content-Type":"application/json",
+      "Prefer":"return=minimal"
+    },
+    body:JSON.stringify(payload)
+  });
+
+  savingOrder=false;
+
+  if(!r.ok){
+    const msg=await r.text().catch(()=> "");
+    throw new Error(`Order save failed (${r.status}). ${msg}`);
+  }
+
+  orderSaved=true;
+  saveStatus.textContent="Order ID saved ✓ Open Discord and paste this Order ID in your Purchase Ticket.";
+  return true;
+}
+
+ticket.addEventListener("click",async e=>{
+  if(orderSaved) return;
+  e.preventDefault();
+
+  const target=ticket.href;
+
+  try{
+    await saveOrderToSupabase();
+    window.open(target,"_blank","noopener");
+  }catch(err){
+    console.error(err);
+    saveStatus.textContent="Could not save the Order ID yet. Try the Purchase Ticket button again.";
+  }
+});
+
+copyOrder.onclick=async()=>{
+  try{
+    await navigator.clipboard.writeText(oid);
+    copyOrder.textContent="COPIED ✓";
+    setTimeout(()=>copyOrder.textContent="COPY",1200)
+  }catch(e){
+    copyOrder.textContent="SELECT"
+  }
+}</script>
 </body></html>
