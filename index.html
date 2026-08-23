@@ -1,1023 +1,293 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sarah Shop — Store</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#03060b">
+<title>Sarah Shop — Digital Marketplace</title>
 <link rel="icon" href="sarah-logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
-
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
-:root{
-  --bg:#02040a;--p:#07111c;--p2:#0a1625;--c:#72eaff;--b:#0568ff;
-  --w:#f7fbff;--m:#768ba0;--l:rgba(83,198,255,.15);--green:#78ffae;--gold:#ffc56d
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:110px}
-body{
-  margin:0;min-height:100vh;color:var(--w);font-family:Manrope,sans-serif;
-  background:radial-gradient(circle at 50% -10%,rgba(0,183,255,.14),transparent 28%),
-  linear-gradient(#02040a,#030812 55%,#02040a)
-}
-a{color:inherit}.wrap{width:min(94%,1500px);margin:auto}
+.store-layout{width:min(96%,1580px);margin:18px auto 70px;display:grid;grid-template-columns:235px 1fr;gap:18px}
+.sidebar{position:sticky;top:18px;height:calc(100vh - 36px);padding:16px;border-radius:24px;display:flex;flex-direction:column}
+.sidebar .brand{padding:4px 2px 18px;border-bottom:1px solid var(--line)}
+.side-title{margin:22px 0 8px;color:#506b84;font-size:8px;font-weight:900;letter-spacing:1.3px}
+.side-links{display:grid;gap:7px}
+.side-link{width:100%;padding:11px 12px;border-radius:12px;border:1px solid transparent;background:transparent;color:#8398ab;cursor:pointer;text-align:left;font-size:10px;font-weight:800}
+.side-link:hover,.side-link.active{color:#effcff;background:linear-gradient(135deg,rgba(105,236,255,.08),rgba(20,120,255,.08));border-color:var(--line2)}
+.side-link i{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;background:#0c1825;color:var(--cyan);font-style:normal;margin-right:9px}
+.side-bottom{margin-top:auto;display:grid;gap:8px}
+.side-bottom .btn{width:100%}
+.store-main{min-width:0}
+.store-topbar{position:sticky;top:18px;z-index:40;border-radius:19px;padding:9px;display:grid;grid-template-columns:1fr auto;gap:10px}
+.search{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;min-height:46px;border:1px solid var(--line);border-radius:13px;background:#07111b;padding:0 11px}
+.search span{color:var(--cyan);font-size:19px}.search input{width:100%;border:0;outline:0;background:transparent;color:#effbff;font-size:11px}.search input::placeholder{color:#536e85}
+.clear{width:34px;height:34px;border-radius:10px;border:0;background:#0c1825;color:#6f8599;cursor:pointer}
+.hero{position:relative;overflow:hidden;margin-top:18px;min-height:470px;border-radius:28px;border:1px solid var(--line);background:#06101a;box-shadow:0 35px 110px rgba(0,0,0,.44)}
+.hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,8,14,.98),rgba(3,8,14,.78) 38%,rgba(3,8,14,.12) 70%,transparent),linear-gradient(0deg,rgba(2,7,12,.35),transparent 45%)}
+.hero-copy{position:relative;z-index:2;max-width:670px;padding:52px 48px}
+.hero-copy h1{margin-top:10px;font-size:clamp(44px,6vw,82px);line-height:.9;letter-spacing:-2px}
+.hero-copy h1 span{background:linear-gradient(90deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-copy p{max-width:590px;margin:16px 0 0;color:#8499aa;font-size:11px;line-height:1.8}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}
+.hero-deck{position:absolute;right:26px;bottom:25px;z-index:3;width:min(440px,43%);height:200px;perspective:1000px}
+.deck-card{position:absolute;width:180px;height:125px;border-radius:18px;overflow:hidden;border:1px solid var(--line2);background:#07111b;box-shadow:0 25px 60px rgba(0,0,0,.38);transform-style:preserve-3d}
+.deck-card img{width:100%;height:100%;object-fit:cover}
+.deck-card:nth-child(1){right:0;bottom:0;transform:rotateY(-18deg) rotateX(7deg) rotateZ(4deg)}
+.deck-card:nth-child(2){right:125px;bottom:38px;transform:rotateY(-11deg) rotateX(6deg) rotateZ(-4deg)}
+.deck-card:nth-child(3){right:240px;bottom:4px;transform:rotateY(-5deg) rotateX(7deg) rotateZ(3deg)}
+.quick-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+.quick{min-height:88px;padding:14px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(145deg,#0b1622,#06101a);cursor:pointer;color:#8ea4b6;text-align:left}
+.quick:hover{border-color:var(--line2);transform:translateY(-3px)}
+.quick b{display:block;color:#edfaff;font-size:10px}.quick span{display:block;margin-top:4px;color:#59748b;font-size:8px}
+.featured-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:14px}
+.big-feature,.stack-feature{position:relative;overflow:hidden;border-radius:23px;border:1px solid var(--line);background:#06101a;min-height:360px}
+.big-feature img,.small-feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.big-feature:after,.small-feature:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,8,14,.96),rgba(3,8,14,.28) 64%,transparent)}
+.big-feature .feature-copy{position:relative;z-index:2;max-width:52%;padding:30px;height:100%;display:flex;flex-direction:column;justify-content:flex-end}
+.feature-copy h3{font-size:28px;margin-top:7px}.feature-copy p{color:#748b9f;font-size:9px;line-height:1.65;margin:8px 0 18px}
+.stack-feature{display:grid;grid-template-rows:1fr 1fr}
+.small-feature{position:relative;overflow:hidden}.small-feature:first-child{border-bottom:1px solid var(--line)}
+.small-feature .feature-copy{position:relative;z-index:2;padding:20px;max-width:65%;height:100%;display:flex;flex-direction:column;justify-content:flex-end}.small-feature .feature-copy h3{font-size:17px}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.product{overflow:hidden;border-radius:19px;border:1px solid var(--line);background:linear-gradient(145deg,#0a1520,#06101a)}
+.product-media{height:160px;position:relative;overflow:hidden}.product-media img{width:100%;height:100%;object-fit:cover;display:block}.product-media:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(6,16,26,.94))}
+.product-body{padding:14px}.product-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.product small{color:#52718b;font-size:7px;font-weight:900}.badge{padding:5px 7px;border-radius:999px;border:1px solid rgba(105,236,255,.12);background:rgba(105,236,255,.05);color:#69d9ea;font-size:6px;font-weight:900}
+.product h3{font-size:15px;margin-top:10px}.desc{margin:6px 0 12px;min-height:24px;color:#647d92;font-size:8px;line-height:1.5}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:11px;border-top:1px solid rgba(117,204,255,.08)}.meta span{color:#5d768b;font-size:8px}.meta b{color:var(--cyan);font:700 10px Orbitron}
+.view{width:100%;margin-top:11px;min-height:38px;border-radius:10px;border:1px solid rgba(105,236,255,.16);background:rgba(105,236,255,.06);color:var(--cyan);font-size:8px;font-weight:900;cursor:pointer}
+.view:hover{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#00131c}
+.how{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.how-card{padding:18px;border-radius:17px}.how-card span{font:700 10px Orbitron;color:var(--cyan)}.how-card h3{font-size:13px;margin-top:8px}.how-card p{color:#657d91;font-size:8px;line-height:1.6}
+.drawer{position:fixed;inset:0;z-index:100;display:none}.drawer.show{display:block}.drawer-backdrop{position:absolute;inset:0;background:rgba(1,4,8,.75);backdrop-filter:blur(8px)}
+.drawer-panel{position:absolute;right:0;top:0;width:min(540px,100%);height:100%;overflow:auto;padding:18px;background:linear-gradient(180deg,#08131f,#050b12);border-left:1px solid var(--line2);box-shadow:-30px 0 90px rgba(0,0,0,.46)}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.drawer-top h2{font-size:23px}.close{width:41px;height:41px;border-radius:11px;border:1px solid var(--line);background:#0a1520;color:#9fb3c5;cursor:pointer}
+.drawer-img{height:225px;border-radius:18px;overflow:hidden;margin-top:16px;border:1px solid var(--line)}.drawer-img img{width:100%;height:100%;object-fit:cover}
+.drawer-desc{color:#738a9e;font-size:9px;line-height:1.65}.option-list{display:grid;gap:8px}.option{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:12px;background:#08131f}.option span{font-size:9px;color:#91a5b7}.option b{font:700 9px Orbitron;color:var(--cyan)}.option a{padding:8px 10px;border-radius:8px;text-decoration:none;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#00131c;font-size:8px;font-weight:900}
+.empty{grid-column:1/-1;padding:28px;text-align:center;border:1px dashed var(--line);border-radius:16px;color:#607a90}
+@media(max-width:1250px){.products{grid-template-columns:repeat(3,1fr)}.quick-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:980px){.store-layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}.side-title,.side-links{display:none}.side-bottom{grid-template-columns:1fr 1fr;margin-top:10px}.featured-grid{grid-template-columns:1fr}.stack-feature{min-height:300px}.products{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.store-layout{width:min(94%,100%)}.store-topbar{grid-template-columns:1fr}.store-topbar .nav-actions{display:none}.hero{min-height:560px}.hero:after{background:linear-gradient(0deg,rgba(3,8,14,.99),rgba(3,8,14,.78) 60%,rgba(3,8,14,.12))}.hero-copy{position:absolute;bottom:145px;padding:28px 22px}.hero-copy h1{font-size:48px}.hero-deck{width:92%;height:145px;left:4%;right:auto;bottom:10px}.deck-card{width:150px;height:100px}.deck-card:nth-child(1){right:0}.deck-card:nth-child(2){right:105px}.deck-card:nth-child(3){right:210px}.quick-grid{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:1fr}.how{grid-template-columns:1fr 1fr}.side-bottom{grid-template-columns:1fr}}
+@media(max-width:440px){.quick-grid,.how{grid-template-columns:1fr}.hero-copy h1{font-size:40px}.deck-card:nth-child(3){display:none}}
 
-button,a,.product,.modal-card,.modal-shell,.category-panel,.hero,.banner,.glass-search{
-  transition:
-    transform .22s ease,
-    opacity .22s ease,
-    border-color .22s ease,
-    background .22s ease,
-    box-shadow .22s ease,
-    filter .22s ease;
+.reveal{opacity:0;transform:translateY(18px) scale(.985);transition:opacity .55s ease,transform .55s ease}
+.reveal.reveal-in{opacity:1;transform:none}
+.hero{isolation:isolate}
+.hero:before{
+  content:"";position:absolute;inset:auto auto -130px -80px;width:360px;height:360px;border-radius:50%;
+  border:1px solid rgba(105,236,255,.12);box-shadow:0 0 60px rgba(20,120,255,.05);transform:rotateX(68deg);
+  z-index:1;pointer-events:none
 }
-@media (prefers-reduced-motion: reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{
-    scroll-behavior:auto !important;
-    transition:none !important;
-    animation:none !important;
-  }
+.hero-grid-3d{
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(rgba(105,236,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(105,236,255,.06) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:linear-gradient(90deg,black,transparent 78%);
+  transform:perspective(1000px) rotateX(68deg) translateY(280px) scale(1.35);
+  transform-origin:center bottom
 }
+.hero-deck .deck-card{backface-visibility:hidden}
+.hero-deck .deck-card:after{
+  content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 0 38px rgba(20,120,255,.10)
+}
+.product,.quick,.how-card,.big-feature,.small-feature{position:relative}
+.product:before,.quick:before,.how-card:before,.big-feature:before,.small-feature:before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(circle at 30% 10%,rgba(105,236,255,.06),transparent 35%);
+  opacity:0;transition:opacity .2s ease
+}
+.product:hover:before,.quick:hover:before,.how-card:hover:before,.big-feature:hover:before,.small-feature:hover:before{opacity:1}
+.product-media:before{
+  content:"";position:absolute;left:50%;bottom:-38px;width:120px;height:55px;border-radius:50%;
+  background:radial-gradient(circle,rgba(105,236,255,.18),transparent 70%);
+  transform:translateX(-50%);filter:blur(12px);z-index:2
+}
+.fx-orb{
+  position:absolute;width:90px;height:90px;border-radius:50%;pointer-events:none;z-index:2;
+  background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.16),rgba(105,236,255,.08) 25%,rgba(20,120,255,.04) 55%,transparent 72%);
+  box-shadow:inset -12px -10px 25px rgba(0,0,0,.18),0 0 40px rgba(20,120,255,.08);
+  backdrop-filter:blur(4px)
+}
+.fx-orb.o1{right:6%;top:12%}.fx-orb.o2{right:24%;bottom:8%;width:62px;height:62px}
 
-.grid{position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(61,183,255,.024) 1px,transparent 1px),linear-gradient(90deg,rgba(61,183,255,.024) 1px,transparent 1px);background-size:48px 48px}
-.nav{
-  width:min(94%,1500px);margin:16px auto;padding:14px 16px;border:1px solid var(--l);
-  border-radius:20px;background:rgba(4,10,18,.88);display:flex;justify-content:space-between;
-  align-items:center;position:sticky;top:12px;z-index:20;backdrop-filter:blur(18px)
-}
-.brand{display:flex;gap:12px;align-items:center;text-decoration:none}
-.brand img{width:46px;height:46px;border-radius:14px;object-fit:cover;border:1px solid rgba(114,234,255,.25)}
-.brand b{font-family:Orbitron}.small{font-size:8px;color:#61768a;letter-spacing:1.3px}
-.btn{
-  padding:11px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--l);
-  background:#091522;color:#9eb0c2;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center
-}
-.btn.primary{background:linear-gradient(135deg,var(--c),var(--b));color:#001018;border:none}
-.banner{overflow:hidden;border:1px solid var(--l);border-radius:28px}
-.banner img{width:100%;height:auto;display:block}
-.hero{
-  margin-top:16px;padding:30px;border:1px solid var(--l);border-radius:22px;
-  background:linear-gradient(145deg,#091522,#05101a);display:flex;align-items:end;justify-content:space-between;gap:22px
-}
-h1{font-family:Orbitron;font-size:clamp(38px,5vw,68px);line-height:.92;margin:0}.accent{color:var(--c)}
-.hero p{color:var(--m);font-size:12px;line-height:1.7;max-width:760px}
-.store-status{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
-.status-pill{
-  padding:8px 10px;border:1px solid var(--l);border-radius:999px;background:#06101a;
-  color:#7e93a6;font-size:9px;font-weight:800
-}
-.status-pill strong{color:var(--green)}
-.ticket-note{
-  margin-top:18px;padding:15px;border:1px solid rgba(255,197,109,.18);border-radius:13px;
-  background:rgba(255,197,109,.04);color:#b89462;font-size:10px;line-height:1.65
-}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:65px 0 18px}
-.tab{
-  padding:10px 14px;border-radius:999px;border:1px solid var(--l);background:#07111c;
-  color:#6e8499;font-weight:800;cursor:pointer
-}
-.tab.active,.tab:hover{background:linear-gradient(135deg,var(--c),var(--b));color:#001018}
-.products{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;padding-bottom:90px}
+/* ===== PRODUCT CARD GLOW BARS ===== */
 .product{
-  position:relative;overflow:hidden;border:1px solid var(--l);border-radius:20px;
-  background:linear-gradient(145deg,#091522,#05101a);padding:19px;transition:.2s ease
-}
-.product:hover{transform:translateY(-3px);border-color:rgba(83,198,255,.3);box-shadow:0 18px 50px rgba(0,0,0,.18)}
-.product-image{
-  width:100%;
-  aspect-ratio:16/9;
-  margin:-2px 0 15px;
-  border-radius:14px;
-  overflow:hidden;
-  border:1px solid rgba(83,198,255,.12);
-  background:#020811;
-}
-.product-image img{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:cover;
-  transition:transform .25s ease, filter .25s ease;
-}
-.product:hover .product-image img{
-  transform:scale(1.025);
-  filter:brightness(1.06);
-}
-
-.product:before{
-  content:"";position:absolute;inset:0 0 auto;height:2px;
-  background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:.45
-}
-.product-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.product small{color:#4f718e;font-weight:800;font-size:7px;letter-spacing:1px}
-.badge{
-  padding:6px 8px;border-radius:999px;background:rgba(120,255,174,.06);
-  border:1px solid rgba(120,255,174,.13);color:var(--green);font-size:7px;font-weight:900;letter-spacing:.6px
-}
-.product h3{margin:12px 0 4px;font-size:21px}
-.desc{color:#6f8498;font-size:10px;line-height:1.55;min-height:31px}
-.details{
-  display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:14px 0
-}
-.detail{
-  padding:9px;border:1px solid rgba(83,198,255,.08);border-radius:10px;background:#06101a
-}
-.detail span{display:block;color:#49677e;font-size:7px;font-weight:900;letter-spacing:.7px}
-.detail b{display:block;margin-top:4px;color:#9db0c1;font-size:9px}
-.service-list{
-  margin:0 0 14px;padding:11px;border:1px solid rgba(83,198,255,.08);
-  border-radius:11px;background:#050e17;color:#7f94a7;font-size:9px;line-height:1.7
-}
-.service-list strong{color:#b6c8d7}
-.rows{display:grid;gap:8px}
-.row{
-  display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px;
-  border-radius:10px;border:1px solid rgba(83,198,255,.09);background:#06101a;color:#7d91a5;font-size:10px
-}
-.row b{color:var(--c);font-family:Orbitron;font-size:10px}
-.buy{
-  padding:8px 10px;border-radius:8px;text-decoration:none;background:rgba(0,183,255,.1);
-  color:var(--c);border:1px solid rgba(0,183,255,.18);font-weight:800;transition:.15s ease
-}
-.buy:hover{background:linear-gradient(135deg,var(--c),var(--b));color:#001018}
-.card-foot{
-  margin-top:12px;padding-top:11px;border-top:1px solid rgba(83,198,255,.07);
-  color:#526c81;font-size:8px;line-height:1.5
-}
-.hidden{display:none}
-
-.hero-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-.glass-search{
-  margin:18px 0 14px;
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  align-items:center;
-  gap:10px;
-  min-height:54px;
-  padding:0 12px 0 15px;
-  border:1px solid rgba(132,218,255,.18);
-  border-radius:16px;
-  background:
-    linear-gradient(135deg,rgba(255,255,255,.065),rgba(255,255,255,.025)),
-    rgba(3,10,18,.46);
-  backdrop-filter:blur(20px) saturate(135%);
-  -webkit-backdrop-filter:blur(20px) saturate(135%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    0 14px 45px rgba(0,0,0,.18);
-}
-.glass-search:focus-within{
-  border-color:rgba(114,234,255,.38);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    0 0 0 3px rgba(0,183,255,.07),
-    0 18px 55px rgba(0,0,0,.22);
-  transform:translateY(-1px);
-}
-.search-icon{
-  color:var(--c);
-  font-size:22px;
-  line-height:1;
-  opacity:.9;
-}
-.glass-search input{
-  width:100%;
-  min-width:0;
-  border:0;
-  outline:0;
-  background:transparent;
-  color:#e9f7ff;
-  font:inherit;
-  font-size:12px;
-}
-.glass-search input::placeholder{color:#587187}
-.glass-search button{
-  width:36px;
-  height:36px;
-  border-radius:10px;
-  border:1px solid rgba(83,198,255,.12);
-  background:rgba(5,15,25,.54);
-  color:#72899b;
-  cursor:pointer;
-}
-.glass-search button:hover{
-  color:#001018;
-  background:linear-gradient(135deg,var(--c),var(--b));
-}
-.search-results{
-  display:none;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-  margin-bottom:14px;
-}
-.search-results.show{display:grid}
-.search-hit{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:11px 12px;
-  border-radius:12px;
-  border:1px solid rgba(83,198,255,.10);
-  background:rgba(5,15,25,.62);
-  color:#8ba0b2;
-  font-size:10px;
-  cursor:pointer;
-}
-.search-hit:hover{
-  border-color:rgba(83,198,255,.26);
-  background:rgba(8,24,39,.78);
-  transform:translateY(-1px);
-}
-.search-hit strong{color:#d9ecf8}
-.search-hit span{color:var(--c);font-size:9px;font-weight:900}
-.search-empty{
-  grid-column:1/-1;
-  padding:12px;
-  border:1px dashed rgba(83,198,255,.12);
-  border-radius:12px;
-  color:#61798d;
-  font-size:10px;
-}
-.all-products-section{
-  margin-top:10px;
-  padding-top:8px;
-}
-.all-products-head{
-  margin-bottom:18px;
-  padding:20px;
-  border:1px solid var(--l);
-  border-radius:20px;
-  background:linear-gradient(145deg,#091522,#05101a);
-}
-.all-products-head span{
-  color:#4f718e;
-  font-size:8px;
-  font-weight:900;
-  letter-spacing:1.4px;
-}
-.all-products-head h2{
-  margin:7px 0 5px;
-  font-family:Orbitron;
-  font-size:clamp(24px,3vw,34px);
-}
-.all-products-head p{
-  margin:0;
-  color:#6f8498;
-  font-size:10px;
-  line-height:1.6;
-}
-.product.reveal{
-  animation:cardReveal .36s ease both;
-}
-@keyframes cardReveal{
-  from{opacity:0;transform:translateY(12px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.category-modal.show .modal-shell{animation:modalIn .22s ease both}
-.category-modal.show .modal-backdrop{animation:fadeIn .2s ease both}
-@keyframes modalIn{
-  from{opacity:0;transform:translateY(14px) scale(.985)}
-  to{opacity:1;transform:translateY(0) scale(1)}
-}
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-@media(max-width:760px){
-  .search-results{grid-template-columns:1fr}
-  .hero-actions{margin-top:16px}
-}
-
-
-.category-panel{
-  margin:58px 0 80px;
-  padding:22px;
-  border:1px solid var(--l);
-  border-radius:22px;
-  background:linear-gradient(145deg,#091522,#05101a);
-}
-.category-copy span{
-  color:#4f718e;
-  font-size:8px;
-  font-weight:900;
-  letter-spacing:1.5px;
-}
-.category-copy h2{
-  margin:7px 0 4px;
-  font-family:Orbitron;
-  font-size:clamp(22px,3vw,32px);
-}
-.category-copy p{
-  margin:0 0 16px;
-  color:#6f8498;
-  font-size:10px;
-}
-.category-panel .tabs{margin:0}
-.category-panel .tab{
-  min-height:44px;
-  padding:11px 16px;
-  border-radius:12px;
-  transition:.18s ease;
-}
-.category-panel .tab:hover{
-  transform:translateY(-2px);
-  border-color:rgba(83,198,255,.32);
-}
-.category-modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:100;
-  padding:24px;
-  align-items:center;
-  justify-content:center;
-}
-.category-modal.show{display:flex}
-.modal-backdrop{
-  position:absolute;
-  inset:0;
-  background:rgba(0,3,8,.82);
-  backdrop-filter:blur(10px);
-}
-.modal-shell{
   position:relative;
-  width:min(1120px,96vw);
-  max-height:88vh;
-  overflow:auto;
-  border:1px solid rgba(83,198,255,.24);
-  border-radius:24px;
-  background:linear-gradient(145deg,#091522,#04101a);
-  box-shadow:0 30px 100px rgba(0,0,0,.58);
 }
-.modal-head{
-  position:sticky;
-  top:0;
-  z-index:3;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:18px;
-  padding:22px;
-  border-bottom:1px solid rgba(83,198,255,.10);
-  background:rgba(5,14,24,.97);
-  backdrop-filter:blur(16px);
+.product::after{
+  content:"";
+  position:absolute;
+  left:0;
+  top:16px;
+  bottom:16px;
+  width:3px;
+  border-radius:0 999px 999px 0;
+  background:linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(105,236,255,.28) 12%,
+    var(--cyan) 38%,
+    var(--blue) 70%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 8px rgba(105,236,255,.65),
+    0 0 18px rgba(20,120,255,.42),
+    0 0 34px rgba(20,120,255,.20);
+  opacity:.72;
+  pointer-events:none;
+  transition:
+    opacity .22s ease,
+    box-shadow .22s ease,
+    top .22s ease,
+    bottom .22s ease;
+  z-index:6;
 }
-.modal-kicker{
-  color:#4f718e;
-  font-size:8px;
-  font-weight:900;
-  letter-spacing:1.5px;
+.product:hover::after{
+  top:9px;
+  bottom:9px;
+  opacity:1;
+  box-shadow:
+    0 0 10px rgba(105,236,255,.90),
+    0 0 24px rgba(20,120,255,.60),
+    0 0 48px rgba(20,120,255,.30);
 }
-.modal-head h2{
-  margin:6px 0 4px;
-  font-family:Orbitron;
-  font-size:28px;
-}
-.modal-head p{
-  margin:0;
-  color:#70869a;
-  font-size:10px;
-}
-.modal-close{
-  width:44px;
-  height:44px;
-  border-radius:12px;
-  border:1px solid rgba(83,198,255,.16);
-  background:#07111c;
-  color:#a7b8c6;
-  font-size:25px;
-  cursor:pointer;
-}
-.modal-close:hover{
-  background:linear-gradient(135deg,var(--c),var(--b));
-  color:#001018;
-}
-.modal-products{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-  padding:18px;
-}
-.modal-card{
-  overflow:hidden;
-  border:1px solid rgba(83,198,255,.12);
-  border-radius:18px;
-  background:#06111c;
-}
-.modal-card-image{
-  aspect-ratio:16/9;
-  overflow:hidden;
-  background:#020811;
-}
-.modal-card-image img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
+
+/* Tiny matching glow line at the top edge */
+.product .product-body::before{
+  content:"";
   display:block;
+  width:58px;
+  height:2px;
+  margin:-1px 0 12px;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--cyan),rgba(20,120,255,.18),transparent);
+  box-shadow:0 0 12px rgba(105,236,255,.35);
+  opacity:.65;
+  transition:width .22s ease,opacity .22s ease;
 }
-.modal-card-body{padding:15px}
-.modal-card-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-.modal-card-top small{
-  color:#4f718e;
-  font-size:7px;
-  font-weight:900;
-  letter-spacing:1px;
-}
-.modal-card h3{
-  margin:9px 0 4px;
-  font-size:19px;
-}
-.modal-card-desc{
-  color:#70869a;
-  font-size:9px;
-  line-height:1.55;
-  margin-bottom:12px;
-}
-.modal-options{
-  display:grid;
-  gap:8px;
-}
-.modal-option{
-  display:grid;
-  grid-template-columns:1fr auto auto;
-  gap:10px;
-  align-items:center;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid rgba(83,198,255,.09);
-  background:#030b13;
-  color:#8194a7;
-  font-size:10px;
-}
-.modal-option b{
-  color:var(--c);
-  font-family:Orbitron;
-  font-size:10px;
-}
-.modal-option a{
-  padding:8px 10px;
-  border-radius:8px;
-  text-decoration:none;
-  background:rgba(0,183,255,.10);
-  color:var(--c);
-  border:1px solid rgba(0,183,255,.18);
-  font-weight:900;
-}
-.modal-option a:hover{
-  background:linear-gradient(135deg,var(--c),var(--b));
-  color:#001018;
-}
-body.modal-open{overflow:hidden}
-
-@media(max-width:760px){
-  .category-modal{padding:10px}
-  .modal-shell{width:100%;max-height:92vh;border-radius:18px}
-  .modal-products{grid-template-columns:1fr;padding:12px}
-  .modal-head{padding:16px}
-  .modal-option{grid-template-columns:1fr auto}
-  .modal-option a{grid-column:1/-1}
+.product:hover .product-body::before{
+  width:92px;
+  opacity:1;
 }
 
-@media(max-width:1000px){.products{grid-template-columns:repeat(2,1fr)}.hero{display:block}}
-@media(max-width:620px){.products{grid-template-columns:1fr}.small{display:none}.details{grid-template-columns:1fr}.nav{padding:11px}.hero{padding:22px}}
 </style>
 </head>
+<body><div class="aurora"></div>
+<div class="store-layout">
+  <aside class="sidebar glass">
+    <a class="brand" href="index.html"><img src="sarah-logo.png"><div><strong>SARAH SHOP</strong><small>DIGITAL MARKET</small></div></a>
+    <div class="side-title">BROWSE</div>
+    <div class="side-links">
+      <button class="side-link active" data-cat="all"><i>⌂</i>All Products</button>
+      <button class="side-link" data-cat="streaming"><i>▶</i>Streaming</button>
+      <button class="side-link" data-cat="ai"><i>✦</i>AI Services</button>
+      <button class="side-link" data-cat="discord"><i>◈</i>Discord</button>
+      <button class="side-link" data-cat="social"><i>◎</i>Social Media</button>
+      <button class="side-link" data-cat="gaming"><i>✚</i>Gaming</button>
+    </div>
+    <div class="side-title">STORE</div>
+    <div class="side-links"><a class="side-link" href="tos.html"><i>§</i>Terms of Service</a></div>
+    <div class="side-bottom"><a class="btn" href="#catalog">Browse Store</a><a class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank">Purchase Ticket</a></div>
+  </aside>
 
-<body>
-<div class="grid"></div>
+  <main class="store-main">
+    <div class="store-topbar glass">
+      <div class="search"><span>⌕</span><input id="search" placeholder="Search Sarah Shop..." autocomplete="off"><button class="clear" id="clearSearch">×</button></div>
+      <div class="nav-actions"><a class="btn" href="tos.html">Terms</a><a class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank">Discord</a></div>
+    </div>
 
-<nav class="nav">
-  <a class="brand" href="index.html">
-    <img src="sarah-logo.png" alt="Sarah Shop">
-    <div><b>SARAH SHOP</b><div class="small">LITECOIN CHECKOUT</div></div>
-  </a>
-  <div>
-    <a class="btn" href="tos.html">Terms</a>
-    <a class="btn primary" target="_blank" href="https://discord.gg/AEdJtcKwVB">Discord</a>
-  </div>
-</nav>
-
-<main class="wrap">
-  <div class="banner"><img src="sarah-banner.png" alt="Sarah Shop banner"></div>
-
-  <section class="hero">
-    <div>
-      <h1>FIND IT. CONFIRM IT. <span class="accent">GET IT.</span></h1>
-      <p>
-        Browse the store below. Product cards now show what each category includes before checkout.
-        Exact service, quantity, account details, region, warranty, and final order details should be confirmed
-        in a Discord Purchase Ticket before you send Litecoin.
-      </p>
-      <div class="store-status">
-        <span class="status-pill"><strong>●</strong> STORE ONLINE</span>
-        <span class="status-pill">Ł LTC ACCEPTED</span>
-        <span class="status-pill">🎫 TICKET CONFIRMATION</span>
+    <section class="hero scene holo neon-edge depth-shadow"><div class="hero-grid-3d"></div><div class="fx-orb o1 parallax-float" data-parallax="22"></div><div class="fx-orb o2 parallax-float" data-parallax="-14"></div>
+      <img src="sarah-banner.png" alt="Sarah Shop banner">
+      <div class="hero-copy depth-2 parallax-float" data-parallax="-8">
+        <div class="kicker">3D DIGITAL MARKETPLACE</div>
+        <h1>WELCOME TO <span>SARAH STOCK.</span></h1>
+        <p>A fully rebuilt storefront with visual product cards, cleaner navigation, fast search, and a smooth order-to-Discord flow.</p>
+        <div class="hero-actions"><a class="btn primary" href="#catalog">Explore Store ↓</a><a class="btn" href="https://discord.gg/rAQcaKJSF8" target="_blank">Purchase Ticket ↗</a></div>
       </div>
-      <div class="ticket-note">
-        <b>Important:</b> A product card may cover multiple service types. For example, TikTok can include
-        views, likes, or followers. Your checkout will require you to confirm the exact order with staff before payment.
+      <div class="hero-deck parallax-float" data-parallax="18">
+        <div class="deck-card floaty"><img src="fortnite.png"></div>
+        <div class="deck-card floaty"><img src="chatgpt.png"></div>
+        <div class="deck-card floaty"><img src="discord.png"></div>
       </div>
-    </div>
-    <div class="hero-actions">
-      <button id="browseAllBtn" class="btn primary" type="button">Browse All Products ↓</button>
-      <a class="btn" href="https://discord.gg/AEdJtcKwVB" target="_blank">Open Discord</a>
-    </div>
-  </section>
-
-  <section class="category-panel">
-    <div class="category-copy">
-      <span>SHOP BY CATEGORY</span>
-      <h2>Choose a category</h2>
-      <p>Click one below to open all products in that category.</p>
-    </div>
-
-    <div class="glass-search">
-      <div class="search-icon">⌕</div>
-      <input id="productSearch" type="search" placeholder="Search Netflix, TikTok, Fortnite, ChatGPT..." autocomplete="off">
-      <button id="clearSearch" type="button" aria-label="Clear search">×</button>
-    </div>
-
-    <div id="searchResults" class="search-results" aria-live="polite"></div>
-
-    <div class="tabs">
-      <button class="tab active" data-cat="all">✦ All Products</button>
-      <button class="tab" data-cat="streaming">▶ Streaming</button>
-      <button class="tab" data-cat="ai">✧ AI Services</button>
-      <button class="tab" data-cat="discord">◈ Discord</button>
-      <button class="tab" data-cat="social">◎ Social Media</button>
-      <button class="tab" data-cat="gaming">◆ Gaming</button>
-    </div>
-  </section>
-
-  <section id="allProductsSection" class="all-products-section">
-    <div class="all-products-head">
-      <span>FULL CATALOG</span>
-      <h2>Browse All Products</h2>
-      <p>Every available product in one place. Use the categories above for a faster filtered view.</p>
-    </div>
-    <div id="products" class="products"></div>
-  </section>
-
-  <div id="categoryModal" class="category-modal" aria-hidden="true">
-    <div class="modal-backdrop" data-close-modal></div>
-
-    <section class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-head">
-        <div>
-          <span class="modal-kicker">SARAH SHOP</span>
-          <h2 id="modalTitle">Products</h2>
-          <p id="modalSubtitle">Choose an option below.</p>
-        </div>
-        <button id="closeModal" class="modal-close" type="button" aria-label="Close">×</button>
-      </div>
-
-      <div id="modalProducts" class="modal-products"></div>
     </section>
-  </div>
-</main>
 
-<script src="products.js"></script>
-
-<script>
-const PRODUCT_IMAGES = {
-  "TikTok":"tiktok.png",
-  "Instagram":"instagram.png",
-  "YouTube":"youtube.png",
-  "Netflix":"netflix.png",
-  "Crunchyroll":"crunchyroll.png",
-  "HBO Max":"hbo-max.png",
-  "Spotify":"spotify.png",
-  "Prime Video":"prime-video.png",
-  "Paramount+":"paramount-plus.png",
-  "ChatGPT":"chatgpt.png",
-  "Claude":"claude.png",
-  "Gemini":"gemini.png",
-  "Server Boosts":"discord.png",
-  "Real Members":"discord.png",
-  "Aged Accounts":"discord.png",
-  "Decorations":"discord.png",
-  "Fortnite":"fortnite.png",
-  "Valorant":"valorant.png"
-};
-
-const CARD_INFO = {
-  "TikTok":{
-    desc:"Social media growth services for TikTok.",
-    services:"Views • Likes • Followers",
-    confirm:"Service + quantity + target link",
-    delivery:"5 min – 48 hrs"
-  },
-  "Instagram":{
-    desc:"Instagram engagement and growth options.",
-    services:"Followers • Likes • Views",
-    confirm:"Service + quantity + profile/post",
-    delivery:"5 min – 48 hrs"
-  },
-  "YouTube":{
-    desc:"YouTube engagement services.",
-    services:"Likes • Views • Other available services",
-    confirm:"Service + quantity + video/channel",
-    delivery:"5 min – 48 hrs"
-  },
-  "Server Boosts":{
-    desc:"Discord server boost packages.",
-    services:"Server boosts",
-    confirm:"Boost count + duration + server",
-    delivery:"Up to 10 hrs"
-  },
-  "Real Members":{
-    desc:"Discord member packages.",
-    services:"Discord members",
-    confirm:"Quantity + server invite",
-    delivery:"Varies by stock"
-  },
-  "Aged Accounts":{
-    desc:"Available aged Discord account tiers.",
-    services:"Account age/type varies by tier",
-    confirm:"Exact account details + warranty",
-    delivery:"Confirm in ticket"
-  },
-  "Decorations":{
-    desc:"Available Discord decoration options.",
-    services:"Profile/account decorations",
-    confirm:"Exact decoration/item",
-    delivery:"Confirm in ticket"
-  },
-  "ChatGPT":{
-    desc:"Available ChatGPT service plans.",
-    services:"Plan access",
-    confirm:"Plan + delivery/account details",
-    delivery:"Confirm in ticket"
-  },
-  "Claude":{
-    desc:"Available Claude service plans.",
-    services:"Plan access",
-    confirm:"Plan + delivery/account details",
-    delivery:"Confirm in ticket"
-  },
-  "Gemini":{
-    desc:"Available Gemini service plans.",
-    services:"Plan access",
-    confirm:"Plan + delivery/account details",
-    delivery:"Confirm in ticket"
-  },
-  "Netflix":{
-    desc:"Netflix account/service options.",
-    services:"Streaming access",
-    confirm:"Plan + region + warranty",
-    delivery:"Confirm in ticket"
-  },
-  "Crunchyroll":{
-    desc:"Crunchyroll account/service options.",
-    services:"Streaming access",
-    confirm:"Plan + region + warranty",
-    delivery:"Confirm in ticket"
-  },
-  "HBO Max":{
-    desc:"HBO Max account/service options.",
-    services:"Streaming access",
-    confirm:"Plan + region + warranty",
-    delivery:"Confirm in ticket"
-  },
-  "Spotify":{
-    desc:"Spotify account/service options.",
-    services:"Music streaming access",
-    confirm:"Plan + region + warranty",
-    delivery:"Confirm in ticket"
-  },
-  "Prime Video":{
-    desc:"Prime Video account/service options.",
-    services:"Streaming access",
-    confirm:"Plan + region + warranty",
-    delivery:"Confirm in ticket"
-  },
-  "Paramount+":{
-    desc:"Paramount+ account/service options.",
-    services:"Streaming access",
-    confirm:"Plan + region + warranty",
-    delivery:"Confirm in ticket"
-  },
-  "Fortnite":{
-    desc:"Fortnite account tiers based on available stock.",
-    services:"Gaming accounts",
-    confirm:"Exact skins/items/account details",
-    delivery:"Confirm in ticket"
-  },
-  "Rainbow Six":{
-    desc:"Rainbow Six account tiers.",
-    services:"Gaming accounts",
-    confirm:"Exact account contents/details",
-    delivery:"Confirm in ticket"
-  },
-  "Valorant":{
-    desc:"Valorant account tiers.",
-    services:"Gaming accounts",
-    confirm:"Exact skins/rank/account details",
-    delivery:"Confirm in ticket"
-  },
-  "Minecraft":{
-    desc:"Minecraft account options.",
-    services:"Gaming accounts",
-    confirm:"Edition/account details",
-    delivery:"Confirm in ticket"
-  },
-  "Roblox":{
-    desc:"Roblox account tiers based on available stock.",
-    services:"Gaming accounts",
-    confirm:"Exact account contents/details",
-    delivery:"Confirm in ticket"
-  },
-  "Rust":{
-    desc:"Rust account options.",
-    services:"Gaming accounts",
-    confirm:"Exact account details",
-    delivery:"Confirm in ticket"
-  },
-  "Apex":{
-    desc:"Apex account tiers.",
-    services:"Gaming accounts",
-    confirm:"Exact skins/rank/account details",
-    delivery:"Confirm in ticket"
-  },
-  "Steam Games Accounts":{
-    desc:"Steam account options based on available stock.",
-    services:"Steam game accounts",
-    confirm:"Exact games/account details",
-    delivery:"Confirm in ticket"
-  },
-  "Epic Games Accounts":{
-    desc:"Epic Games account options based on available stock.",
-    services:"Epic game accounts",
-    confirm:"Exact games/account details",
-    delivery:"Confirm in ticket"
-  }
-};
-
-function productCategory(p){
-  return p.cat || p.category || "other";
-}
-
-const root=document.getElementById("products");
-const groups={};
-
-for(const p of window.SARAH_PRODUCTS){
-  const cat=productCategory(p);
-  const key=cat+"|"+p.name;
-  (groups[key]??=[]).push(p);
-}
-
-for(const [key,items] of Object.entries(groups)){
-  const [cat,name]=key.split("|");
-  const info=CARD_INFO[name] || {
-    desc:"Available Sarah Shop product.",
-    services:"See available options below",
-    confirm:"Exact order details",
-    delivery:"Confirm in ticket"
-  };
-
-  const card=document.createElement("section");
-  card.className="product";
-  card.dataset.cat=cat;
-
-  const productImage = PRODUCT_IMAGES[name] || "sarah-logo.png";
-
-  card.innerHTML=`
-    <div class="product-image">
-      <img src="${productImage}" alt="${name}" loading="lazy">
-    </div>
-
-    <div class="product-top">
-      <small>${cat.toUpperCase()}</small>
-      <span class="badge">● AVAILABLE</span>
-    </div>
-
-    <h3>${name}</h3>
-    <div class="desc">${info.desc}</div>
-
-    <div class="rows"></div>
-
-    <div class="card-foot">
-      Clicking Buy opens the safe checkout. You will confirm the exact order with staff before Litecoin payment unlocks.
-    </div>
-  `;
-
-  const rows=card.querySelector(".rows");
-
-  for(const p of items){
-    const row=document.createElement("div");
-    row.className="row";
-    row.innerHTML=`
-      <span>${p.option}</span>
-      <b>$${Number(p.price).toFixed(Number(p.price)%1 ? 2 : 0)}</b>
-      <a class="buy" href="checkout.html?id=${encodeURIComponent(p.id)}">Review →</a>
-    `;
-    rows.appendChild(row);
-  }
-
-  root.appendChild(card);
-}
-
-
-const modal = document.getElementById("categoryModal");
-const modalProducts = document.getElementById("modalProducts");
-const modalTitle = document.getElementById("modalTitle");
-const modalSubtitle = document.getElementById("modalSubtitle");
-const closeModalBtn = document.getElementById("closeModal");
-
-const browseAllBtn = document.getElementById("browseAllBtn");
-const allProductsSection = document.getElementById("allProductsSection");
-const productSearch = document.getElementById("productSearch");
-const clearSearch = document.getElementById("clearSearch");
-const searchResults = document.getElementById("searchResults");
-
-
-const CATEGORY_NAMES = {
-  all:"All Products",
-  streaming:"Streaming",
-  ai:"AI Services",
-  discord:"Discord Services",
-  social:"Social Media",
-  gaming:"Gaming Accounts"
-};
-
-function buildModalCard(name, cat, items){
-  const info = CARD_INFO[name] || {desc:"Available Sarah Shop product."};
-  const image = PRODUCT_IMAGES[name] || "sarah-logo.png";
-
-  const card = document.createElement("article");
-  card.className = "modal-card";
-
-  card.innerHTML = `
-    <div class="modal-card-image">
-      <img src="${image}" alt="${name}" loading="lazy">
-    </div>
-
-    <div class="modal-card-body">
-      <div class="modal-card-top">
-        <small>${cat.toUpperCase()}</small>
-        <span class="badge">● AVAILABLE</span>
+    <section class="section reveal">
+      <div class="section-head"><div><div class="kicker">QUICK ACCESS</div><h2>SHOP BY CATEGORY</h2></div><p>Jump straight into the part of the store you want.</p></div>
+      <div class="quick-grid">
+        <button class="quick tilt holo depth-shadow" data-cat="streaming"><b>Streaming</b><span>Movies, anime & music</span></button>
+        <button class="quick tilt holo depth-shadow" data-cat="ai"><b>AI Services</b><span>ChatGPT, Claude, Gemini</span></button>
+        <button class="quick tilt holo depth-shadow" data-cat="discord"><b>Discord</b><span>Boosts & members</span></button>
+        <button class="quick tilt holo depth-shadow" data-cat="social"><b>Social Media</b><span>TikTok, Instagram, YouTube</span></button>
+        <button class="quick tilt holo depth-shadow" data-cat="gaming"><b>Gaming</b><span>Fortnite & Valorant</span></button>
+        <button class="quick tilt holo depth-shadow" data-cat="all"><b>Everything</b><span>Full catalog</span></button>
       </div>
+    </section>
 
-      <h3>${name}</h3>
-      <div class="modal-card-desc">${info.desc}</div>
-      <div class="modal-options"></div>
-    </div>
-  `;
+    <section class="section reveal">
+      <div class="section-head"><div><div class="kicker">FEATURED</div><h2>POPULAR PICKS</h2></div><p>Large visual sections instead of another plain card grid.</p></div>
+      <div class="featured-grid scene">
+        <article class="big-feature tilt holo depth-shadow">
+          <img src="fortnite.png" alt="Fortnite">
+          <div class="feature-copy depth-2"><div class="kicker">GAMING</div><h3>FORTNITE</h3><p>Browse Fortnite tiers and move straight into order review.</p><a class="btn primary" href="checkout.html?id=fortnite-starter">View Fortnite →</a></div>
+        </article>
+        <div class="stack-feature">
+          <article class="small-feature">
+            <img src="discord.png" alt="Discord"><div class="feature-copy"><div class="kicker">DISCORD</div><h3>SERVER SERVICES</h3><a class="btn" href="#catalog" data-jump="discord">Browse →</a></div>
+          </article>
+          <article class="small-feature">
+            <img src="tiktok.png" alt="TikTok"><div class="feature-copy"><div class="kicker">SOCIAL</div><h3>TIKTOK</h3><a class="btn" href="#catalog" data-jump="social">Browse →</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-  const options = card.querySelector(".modal-options");
+    <section class="section reveal" id="catalog">
+      <div class="section-head"><div><div class="kicker">FULL CATALOG</div><h2>ALL PRODUCTS</h2></div><p id="count">Loading products…</p></div>
+      <div id="products" class="products scene"></div>
+    </section>
 
-  for(const p of items){
-    const row = document.createElement("div");
-    row.className = "modal-option";
-    row.innerHTML = `
-      <span>${p.option}</span>
-      <b>$${Number(p.price).toFixed(Number(p.price)%1 ? 2 : 0)}</b>
-      <a href="checkout.html?id=${encodeURIComponent(p.id)}">Review →</a>
-    `;
-    options.appendChild(row);
-  }
+    <section class="section reveal">
+      <div class="section-head"><div><div class="kicker">HOW IT WORKS</div><h2>FOUR SIMPLE STEPS</h2></div><p>The website handles browsing and order review. Discord handles the final purchase and delivery.</p></div>
+      <div class="how">
+        <div class="how-card glass tilt holo depth-shadow"><span>01</span><h3>Choose</h3><p>Find a product and compare options.</p></div>
+        <div class="how-card glass tilt holo depth-shadow"><span>02</span><h3>Review</h3><p>Checkout shows the exact product, option, price, and Order ID.</p></div>
+        <div class="how-card glass tilt holo depth-shadow"><span>03</span><h3>Ticket</h3><p>Open a Purchase Ticket and send your Order ID.</p></div>
+        <div class="how-card glass tilt holo depth-shadow"><span>04</span><h3>Receive</h3><p>Staff confirms payment and delivers through Discord.</p></div>
+      </div>
+    </section>
 
-  return card;
+    <footer class="site-footer"><span>SARAH SHOP © 2026</span><span>Digital marketplace • Purchase through Discord</span><div><a href="tos.html">Terms</a> &nbsp; • &nbsp; <a href="https://discord.gg/rAQcaKJSF8" target="_blank">Discord</a></div></footer>
+  </main>
+</div>
+
+<div class="drawer" id="drawer"><div class="drawer-backdrop" data-close></div><aside class="drawer-panel"><div class="drawer-top"><div><div class="kicker">PRODUCT OPTIONS</div><h2 id="drawerTitle">Product</h2></div><button class="close" data-close>×</button></div><div class="drawer-img"><img id="drawerImage" src="sarah-logo.png"></div><p class="drawer-desc" id="drawerDesc"></p><div class="option-list" id="optionList"></div></aside></div>
+
+<script src="products.js"></script><script src="ui.js"></script>
+<script>
+const IMAGES={Netflix:"netflix.png",Crunchyroll:"crunchyroll.png","HBO Max":"hbo-max.png",Spotify:"spotify.png","Prime Video":"prime-video.png","Paramount+":"paramount-plus.png",ChatGPT:"chatgpt.png",Claude:"claude.png",Gemini:"gemini.png","Server Boosts":"discord.png","Real Members":"discord.png",TikTok:"tiktok.png",Instagram:"instagram.png",YouTube:"youtube.png",Fortnite:"fortnite.png",Valorant:"valorant.png"};
+const DESC={Netflix:"Netflix account/service options.",Crunchyroll:"Crunchyroll account/service options.","HBO Max":"HBO Max account/service options.",Spotify:"Spotify streaming options.","Prime Video":"Prime Video account/service options.","Paramount+":"Paramount+ account/service options.",ChatGPT:"ChatGPT plan options.",Claude:"Claude plan options.",Gemini:"Gemini plan options.","Server Boosts":"Discord server boost packages.","Real Members":"Discord member packages.",TikTok:"TikTok social media service packages.",Instagram:"Instagram social media service packages.",YouTube:"YouTube social media service packages.",Fortnite:"Fortnite account tiers.",Valorant:"Valorant account tiers."};
+const CAT={all:"All Products",streaming:"Streaming",ai:"AI Services",discord:"Discord",social:"Social Media",gaming:"Gaming"};
+const groups={};for(const p of SARAH_PRODUCTS){const k=p.cat+"|"+p.name;(groups[k]??=[]).push(p)}
+const products=document.getElementById("products"),search=document.getElementById("search"),count=document.getElementById("count");let activeCat="all";
+const money=n=>"$"+Number(n).toFixed(Number(n)%1?2:0);
+function render(){
+ const q=search.value.trim().toLowerCase();products.innerHTML="";let shown=0;
+ for(const [key,items] of Object.entries(groups)){const [cat,name]=key.split("|"),hay=(name+" "+cat+" "+items.map(x=>x.option).join(" ")).toLowerCase();if(activeCat!=="all"&&cat!==activeCat)continue;if(q&&!hay.includes(q))continue;shown++;const min=Math.min(...items.map(x=>Number(x.price)));
+  const el=document.createElement("article");el.className="product tilt";el.innerHTML=`<div class="product-media"><img src="${IMAGES[name]||"sarah-logo.png"}" alt="${name}" loading="lazy"></div><div class="product-body depth-1"><div class="product-top"><small>${CAT[cat]||cat}</small><span class="badge">● AVAILABLE</span></div><h3>${name}</h3><div class="desc">${DESC[name]||"Available Sarah Shop product."}</div><div class="meta"><span>${items.length} option${items.length>1?"s":""}</span><b>From ${money(min)}</b></div><button class="view" data-product="${name}">VIEW OPTIONS →</button></div>`;products.appendChild(el)
+ }
+ count.textContent=shown===1?"1 product":shown+" products";if(!shown)products.innerHTML='<div class="empty">No products found. Try another search or category.</div>';bindTilt()
 }
-
-function openCategory(cat){
-  modalProducts.innerHTML = "";
-
-  const matches = Object.entries(groups).filter(([key])=>{
-    const [groupCat] = key.split("|");
-    return cat === "all" || groupCat === cat;
-  });
-
-  for(const [key,items] of matches){
-    const [groupCat,name] = key.split("|");
-    modalProducts.appendChild(buildModalCard(name, groupCat, items));
-  }
-
-  modalTitle.textContent = CATEGORY_NAMES[cat] || "Products";
-  modalSubtitle.textContent = `${matches.length} product${matches.length === 1 ? "" : "s"} available`;
-
-  document.querySelectorAll(".tab").forEach(button=>{
-    button.classList.toggle("active", button.dataset.cat === cat);
-  });
-
-  modal.classList.add("show");
-  modal.setAttribute("aria-hidden","false");
-  document.body.classList.add("modal-open");
-  closeModalBtn.focus();
-}
-
-function closeCategory(){
-  modal.classList.remove("show");
-  modal.setAttribute("aria-hidden","true");
-  document.body.classList.remove("modal-open");
-}
-
-
-browseAllBtn.addEventListener("click",()=>{
-  allProductsSection.scrollIntoView({behavior:"smooth",block:"start"});
-
-  document.querySelectorAll("#products .product").forEach((card,index)=>{
-    card.classList.remove("reveal");
-    void card.offsetWidth;
-    card.style.animationDelay = `${Math.min(index * 35, 350)}ms`;
-    card.classList.add("reveal");
-  });
-});
-
-function productMatchesSearch(name, items, query){
-  const haystack = [
-    name,
-    ...items.map(item => `${item.option} ${item.price}`)
-  ].join(" ").toLowerCase();
-
-  return haystack.includes(query);
-}
-
-function renderSearchResults(){
-  const query = productSearch.value.trim().toLowerCase();
-  searchResults.innerHTML = "";
-
-  if(!query){
-    searchResults.classList.remove("show");
-    return;
-  }
-
-  const matches = Object.entries(groups)
-    .filter(([key,items])=>{
-      const [,name] = key.split("|");
-      return productMatchesSearch(name,items,query);
-    })
-    .slice(0,8);
-
-  searchResults.classList.add("show");
-
-  if(matches.length === 0){
-    searchResults.innerHTML = `<div class="search-empty">No products found for “${productSearch.value.trim()}”.</div>`;
-    return;
-  }
-
-  for(const [key,items] of matches){
-    const [cat,name] = key.split("|");
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "search-hit";
-    button.innerHTML = `<strong>${name}</strong><span>${CATEGORY_NAMES[cat] || cat}</span>`;
-    button.addEventListener("click",()=>{
-      openCategory(cat);
-
-      requestAnimationFrame(()=>{
-        const target = [...modalProducts.querySelectorAll(".modal-card")]
-          .find(card => card.querySelector("h3")?.textContent === name);
-
-        if(target){
-          target.scrollIntoView({behavior:"smooth",block:"center"});
-          target.style.boxShadow = "0 0 0 2px rgba(114,234,255,.34), 0 18px 55px rgba(0,0,0,.28)";
-          setTimeout(()=>target.style.boxShadow="",1200);
-        }
-      });
-    });
-    searchResults.appendChild(button);
-  }
-}
-
-productSearch.addEventListener("input",renderSearchResults);
-
-clearSearch.addEventListener("click",()=>{
-  productSearch.value = "";
-  searchResults.innerHTML = "";
-  searchResults.classList.remove("show");
-  productSearch.focus();
-});
-
-
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click",()=>openCategory(tab.dataset.cat));
-});
-
-closeModalBtn.addEventListener("click",closeCategory);
-
-document.querySelectorAll("[data-close-modal]").forEach(el=>{
-  el.addEventListener("click",closeCategory);
-});
-
-document.addEventListener("keydown",(event)=>{
-  if(event.key === "Escape" && modal.classList.contains("show")){
-    closeCategory();
-  }
-});
+function setCat(cat,scroll=true){activeCat=cat;document.querySelectorAll("[data-cat]").forEach(x=>x.classList.toggle("active",x.dataset.cat===cat));render();if(scroll)document.getElementById("catalog").scrollIntoView({behavior:"smooth"})}
+document.querySelectorAll("[data-cat]").forEach(btn=>btn.onclick=()=>setCat(btn.dataset.cat));
+document.querySelectorAll("[data-jump]").forEach(a=>a.onclick=e=>{e.preventDefault();setCat(a.dataset.jump)});
+search.oninput=render;document.getElementById("clearSearch").onclick=()=>{search.value="";render();search.focus()};
+document.addEventListener("click",e=>{const v=e.target.closest("[data-product]");if(v)openDrawer(v.dataset.product);if(e.target.closest("[data-close]"))closeDrawer()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawer()});
+function openDrawer(name){let found=null;for(const [key,items] of Object.entries(groups)){const [,n]=key.split("|");if(n===name){found=items;break}}if(!found)return;drawerTitle.textContent=name;drawerImage.src=IMAGES[name]||"sarah-logo.png";drawerDesc.textContent=DESC[name]||"Available Sarah Shop product.";optionList.innerHTML=found.map(p=>`<div class="option"><span>${p.option}</span><b>${money(p.price)}</b><a href="checkout.html?id=${encodeURIComponent(p.id)}">Review →</a></div>`).join("");drawer.classList.add("show");document.body.style.overflow="hidden"}
+function closeDrawer(){drawer.classList.remove("show");document.body.style.overflow=""}
+function bindTilt(){document.querySelectorAll(".tilt").forEach(card=>{if(card.dataset.tiltBound)return;card.dataset.tiltBound="1";card.onmousemove=e=>{if(window.matchMedia("(pointer:coarse)").matches)return;const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`rotateX(${(-y*6).toFixed(2)}deg) rotateY(${(x*7).toFixed(2)}deg) translateY(-3px)`};card.onmouseleave=()=>card.style.transform=""})}
+render();bindTilt();
 </script>
-</body>
-</html>
+</body></html>

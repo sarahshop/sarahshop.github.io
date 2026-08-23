@@ -1,357 +1,77 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Terms of Service — Sarah Shop</title>
-<link rel="icon" type="image/png" href="sarah-logo.png">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+<link rel="icon" href="sarah-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
-:root{
-  --bg:#02040a;
-  --panel:#07101c;
-  --panel2:#0a1625;
-  --cyan:#72eaff;
-  --blue:#00b7ff;
-  --deep:#0568ff;
-  --white:#f7fbff;
-  --muted:#74899f;
-  --line:rgba(83,198,255,.15);
-  --line2:rgba(83,198,255,.30);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:"Manrope",sans-serif;
-  color:var(--white);
-  background:
-    radial-gradient(circle at 50% -10%,rgba(0,183,255,.13),transparent 28%),
-    linear-gradient(180deg,#02040a,#030812 55%,#02040a);
-  overflow-x:hidden;
-}
-a{color:inherit}
-.bg{
-  position:fixed;inset:0;z-index:-10;pointer-events:none;opacity:.45;
-  background-image:
-    linear-gradient(rgba(61,183,255,.024) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(61,183,255,.024) 1px,transparent 1px);
-  background-size:48px 48px;
-}
-.topline{
-  min-height:34px;padding:7px 18px;display:flex;justify-content:center;align-items:center;
-  border-bottom:1px solid var(--line);background:#040b13;color:#688098;font-size:10px
-}
-.topline b{color:var(--cyan)}
-nav{
-  width:min(94%,1500px);min-height:76px;margin:16px auto 0;padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  border:1px solid var(--line);border-radius:20px;background:rgba(4,10,18,.86);
-  backdrop-filter:blur(20px);position:sticky;top:12px;z-index:1000
-}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-.brand img{width:46px;height:46px;border-radius:14px;object-fit:cover;border:1px solid rgba(114,234,255,.38)}
-.brand strong{font-family:"Orbitron",sans-serif;font-size:16px}
-.brand small{display:block;margin-top:2px;color:#5f7589;font-size:8px;letter-spacing:1.3px}
-.actions{display:flex;gap:8px}
-.nav-btn{
-  padding:12px 14px;border-radius:11px;text-decoration:none;border:1px solid var(--line);
-  background:#091522;color:#9fb0c2;font-size:11px;font-weight:900
-}
-.nav-btn.primary{border:none;color:#001018;background:linear-gradient(135deg,var(--cyan),var(--deep))}
+.legal-hero{position:relative;overflow:hidden;margin-top:20px;min-height:360px;border-radius:28px;border:1px solid var(--line);background:#06101a}
+.legal-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.legal-hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,8,14,.98),rgba(3,8,14,.66) 48%,rgba(3,8,14,.2)),linear-gradient(0deg,rgba(3,8,14,.5),transparent)}
+.legal-copy{position:relative;z-index:2;max-width:690px;padding:46px}
+.legal-copy h1{margin-top:9px;font-size:clamp(38px,5vw,70px);line-height:.92}.legal-copy h1 span{color:var(--cyan)}.legal-copy p{color:#7c91a5;font-size:11px;line-height:1.75}
+.legal-layout{display:grid;grid-template-columns:235px 1fr;gap:18px;margin-top:55px}
+.legal-nav{position:sticky;top:110px;align-self:start;padding:14px;border-radius:18px}.legal-nav a{display:block;padding:11px 12px;margin:4px 0;border-radius:10px;text-decoration:none;color:#7790a5;font-size:9px;font-weight:800}.legal-nav a:hover{background:#0a1825;color:var(--cyan)}
+.legal-content{display:grid;gap:14px}.legal-card{position:relative;overflow:hidden;padding:26px;border-radius:20px}.legal-num{position:absolute;right:14px;top:-28px;font:900 96px Orbitron;color:rgba(255,255,255,.025)}.legal-card h2{font-size:24px;margin-top:7px}.legal-card ul{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:11px}.legal-card li{position:relative;padding-left:18px;color:#8094a7;font-size:11px;line-height:1.75}.legal-card li:before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:2px;background:var(--cyan);box-shadow:0 0 12px rgba(105,236,255,.35)}.legal-card strong{color:#e6f4fb}
+.legal-cta{margin:55px auto 0;padding:28px;border-radius:22px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}.legal-cta h2{font-size:25px}.legal-cta p{color:#71889c;font-size:10px;line-height:1.65}
+@media(max-width:900px){.legal-layout{grid-template-columns:1fr}.legal-nav{position:relative;top:auto}}@media(max-width:650px){.legal-copy{padding:28px 22px}.legal-cta{grid-template-columns:1fr}}
 
-/* full banner, no overlay/cropping */
-.banner{
-  width:min(94%,1500px);
-  margin:24px auto 0;
+.legal-hero{isolation:isolate}
+.legal-hero:before{
+  content:"";position:absolute;right:-100px;bottom:-120px;width:360px;height:360px;border-radius:50%;
+  border:1px solid rgba(105,236,255,.11);box-shadow:0 0 55px rgba(20,120,255,.06);z-index:1
 }
-.banner-shell{
-  border:1px solid rgba(0,183,255,.24);
-  border-radius:28px;
-  overflow:hidden;
-  box-shadow:0 30px 90px rgba(0,0,0,.42);
-}
-.banner-shell img{
-  width:100%;
-  height:auto;
-  display:block;
-  object-fit:contain;
-}
-
-/* intro below banner */
-.intro{
-  width:min(94%,1500px);
-  margin:16px auto 0;
-  display:grid;
-  grid-template-columns:180px 1fr;
-  gap:14px;
-}
-.intro-logo,
-.intro-copy{
-  border:1px solid var(--line);border-radius:20px;background:#07111c
-}
-.intro-logo{
-  display:flex;align-items:center;justify-content:center;padding:20px
-}
-.intro-logo img{
-  width:130px;height:130px;border-radius:24px;object-fit:cover;
-  box-shadow:0 0 45px rgba(0,183,255,.18)
-}
-.intro-copy{padding:24px}
-.intro-copy h1{
-  font-family:"Orbitron",sans-serif;
-  font-size:clamp(36px,5vw,64px);
-  line-height:.92
-}
-.intro-copy h1 span{color:var(--cyan)}
-.intro-copy p{
-  margin-top:10px;max-width:800px;color:#7f93a6;font-size:12px;line-height:1.7
-}
-
-/* policy layout */
-.layout{
-  width:min(94%,1500px);
-  margin:70px auto 120px;
-  display:grid;
-  grid-template-columns:260px 1fr;
-  gap:18px;
-  align-items:start;
-}
-.sidebar{
-  position:sticky;top:105px;
-  border:1px solid var(--line);
-  border-radius:18px;
-  background:#07111c;
-  padding:12px;
-}
-.sidebar-title{
-  padding:10px;color:#4f718e;font-size:8px;font-weight:900;letter-spacing:1px
-}
-.sidebar a{
-  display:block;text-decoration:none;color:#73879b;font-size:11px;font-weight:800;
-  padding:11px 12px;border-radius:9px;margin:3px 0
-}
-.sidebar a:hover{background:#0a1928;color:var(--cyan)}
-.sidebar .back{margin-top:10px;border:1px solid var(--line);text-align:center}
-
-.content{display:grid;gap:14px}
-.policy{
-  border:1px solid var(--line);
-  border-radius:20px;
-  background:linear-gradient(145deg,#091522,#05101a);
-  padding:28px;
-  position:relative;
-  overflow:hidden;
-}
-.policy::before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
-  background:linear-gradient(var(--cyan),transparent)
-}
-.policy-num{
-  position:absolute;right:16px;top:-26px;
-  font-family:"Orbitron",sans-serif;font-size:102px;font-weight:900;
-  color:rgba(255,255,255,.025)
-}
-.policy small{color:var(--cyan);font-size:8px;font-weight:900;letter-spacing:1px}
-.policy h2{margin-top:8px;font-family:"Orbitron",sans-serif;font-size:24px}
-.policy ul{list-style:none;display:grid;gap:12px;margin-top:20px}
-.policy li{
-  position:relative;padding-left:18px;color:#8194a7;font-size:12px;line-height:1.75
-}
-.policy li::before{
-  content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:2px;
-  background:var(--blue);box-shadow:0 0 12px rgba(0,183,255,.4)
-}
-.policy li strong{color:#dce9f3}
-
-.social-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}
-.social-box{
-  padding:14px;border-radius:12px;border:1px solid var(--line);background:#07111c
-}
-.social-box b{display:block;font-size:12px}
-.social-box span{display:block;margin-top:5px;color:#667d91;font-size:10px}
-
-.cta{
-  width:min(94%,1500px);margin:0 auto 110px;
-  padding:32px;border-radius:22px;border:1px solid rgba(0,183,255,.22);
-  background:
-    radial-gradient(circle at 90% 15%,rgba(0,183,255,.14),transparent 24%),
-    linear-gradient(135deg,#0a1726,#06101a);
-  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center
-}
-.cta h3{font-family:"Orbitron",sans-serif;font-size:26px}
-.cta p{margin-top:8px;color:#73899f;font-size:12px;line-height:1.7}
-
-footer{
-  width:min(94%,1500px);margin:auto;min-height:110px;border-top:1px solid var(--line);
-  display:flex;justify-content:space-between;align-items:center;color:#50677d;font-size:9px
-}
-footer a{text-decoration:none;color:#62788e}
-footer a:hover{color:var(--cyan)}
-
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{position:relative;top:auto}
-}
-@media(max-width:700px){
-  .brand small{display:none}
-  .actions .primary{display:none}
-  .intro{grid-template-columns:1fr}
-  .social-grid{grid-template-columns:1fr}
-  .cta{grid-template-columns:1fr}
-  footer{flex-direction:column;align-items:flex-start;justify-content:center;gap:8px}
+.legal-copy{transform-style:preserve-3d}
+.legal-card{transition:transform .2s ease,border-color .2s ease}
+.legal-card:hover{transform:translateY(-3px) rotateX(.8deg);border-color:var(--line2)}
+.legal-card:after{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 0 32px rgba(20,120,255,.045)
 }
 </style>
 </head>
-<body>
-
-<div class="bg"></div>
-
-<div class="topline">
-  <b>Sarah Shop</b>&nbsp; • &nbsp; Terms of Service &nbsp; • &nbsp; Read before purchasing
-</div>
-
-<nav>
-  <a href="website.html" class="brand">
-    <img src="sarah-logo.png" alt="Sarah Shop logo">
-    <div>
-      <strong>SARAH SHOP</strong>
-      <small>TERMS OF SERVICE</small>
-    </div>
-  </a>
-
-  <div class="actions">
-    <a href="index.html" class="nav-btn">← Back to Sarah Shop</a>
-    <a href="https://discord.gg/AEdJtcKwVB" target="_blank" class="nav-btn primary">Support / Purchase</a>
-  </div>
-</nav>
-
-<section class="banner">
-  <div class="banner-shell">
-    <img src="sarah-banner.png" alt="Sarah Shop banner">
-  </div>
-</section>
-
-<section class="intro">
-  <div class="intro-logo">
-    <img src="sarah-logo.png" alt="Sarah Shop SS logo">
-  </div>
-
-  <div class="intro-copy">
-    <h1>TERMS OF <span>SERVICE</span></h1>
-    <p>By purchasing from or dealing with Sarah Shop, you automatically agree to the Terms of Service below. Please read everything carefully before placing an order.</p>
-  </div>
-</section>
-
-<main class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-title">ON THIS PAGE</div>
-    <a href="#general">01 — General Terms</a>
-    <a href="#delivery">02 — Delivery & Orders</a>
-    <a href="#refunds">03 — Refunds & Replacements</a>
-    <a href="#social">04 — Social Media Services</a>
-    <a href="#members">05 — Discord Members</a>
-    <a href="website.html" class="back">← Return to Store</a>
-  </aside>
-
-  <div class="content">
-    <section class="policy" id="general">
-      <div class="policy-num">01</div>
-      <small>SECTION 01</small>
+<body><div class="aurora"></div>
+<nav class="site-nav wrap glass"><a class="brand" href="index.html"><img src="sarah-logo.png"><div><strong>SARAH SHOP</strong><small>TERMS OF SERVICE</small></div></a><div class="nav-actions"><a class="btn" href="index.html">← Store</a><a class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank">Purchase Ticket</a></div></nav>
+<main class="page-shell">
+  <section class="legal-hero scene holo depth-shadow reveal"><img src="sarah-banner.png"><div class="legal-copy"><div class="kicker">LEGAL / STORE POLICY</div><h1>TERMS OF <span>SERVICE.</span></h1><p>Read the full store terms before purchasing. Product-specific details, delivery, warranty, and replacement conditions may also apply.</p><a class="btn primary" href="#general">Read Terms ↓</a></div></section>
+  <div class="legal-layout">
+    <aside class="legal-nav glass">
+      <div class="kicker" style="padding:6px 10px 10px">ON THIS PAGE</div>
+      <a href="#general">01 — General Terms</a><a href="#delivery">02 — Delivery & Orders</a><a href="#refunds">03 — Refunds & Replacements</a><a href="#social">04 — Social Media Services</a><a href="#members">05 — Discord Members</a>
+      <a href="index.html" style="border:1px solid var(--line);margin-top:10px;text-align:center">← Back to Store</a>
+    </aside>
+    <div class="legal-content"><section class="legal-card glass tilt holo depth-shadow reveal" id="general">
+      <div class="legal-num">01</div>
+      <div class="kicker">SECTION 01</div>
       <h2>General Terms</h2>
-      <ul>
-        <li><strong>All sales are final.</strong> No refunds will be issued unless specifically stated in the product description or approved by Sarah Shop. Where applicable, replacements or store credit may be provided.</li>
-        <li><strong>Read before purchasing.</strong> You are responsible for reading and understanding both this TOS and the individual product description before purchasing.</li>
-        <li><strong>Purchasing means agreement.</strong> By purchasing any product or service from Sarah Shop, you confirm that you have read, understood and accepted these terms.</li>
-        <li><strong>Product-specific terms apply.</strong> Certain products may have different delivery times, warranties, replacement policies or requirements.</li>
-        <li><strong>Delivery times vary.</strong> Estimated delivery times are not guaranteed exact completion times. Delays may occur because of stock availability, supplier issues, high order volume, platform changes or circumstances outside our control.</li>
-        <li><strong>Supplier issues.</strong> If a supplier fails to fulfill an order or experiences an issue, Sarah Shop will attempt to resolve the situation where possible. Refunds are not guaranteed for supplier-related issues.</li>
-        <li><strong>Service termination.</strong> If a service is terminated, discontinued, revoked or affected by a platform, refund or replacement eligibility will depend on the specific product's stated terms.</li>
-        <li><strong>Chargebacks.</strong> Unauthorized chargebacks or payment disputes may result in a permanent ban and blacklist from Sarah Shop and its services. Contact support before opening a dispute.</li>
-        <li><strong>Proof of purchase.</strong> Keep your Invoice/Order ID and relevant order information until your order and warranty period have ended.</li>
-      </ul>
-    </section>
-
-    <section class="policy" id="delivery">
-      <div class="policy-num">02</div>
-      <small>SECTION 02</small>
+      <ul><li><strong>All sales are final.</strong> No refunds will be issued unless specifically stated in the product description or approved by Sarah Shop. Where applicable, replacements or store credit may be provided.</li><li><strong>Read before purchasing.</strong> You are responsible for reading and understanding both this TOS and the individual product description before purchasing.</li><li><strong>Purchasing means agreement.</strong> By purchasing any product or service from Sarah Shop, you confirm that you have read, understood and accepted these terms.</li><li><strong>Product-specific terms apply.</strong> Certain products may have different delivery times, warranties, replacement policies or requirements.</li><li><strong>Delivery times vary.</strong> Estimated delivery times are not guaranteed exact completion times. Delays may occur because of stock availability, supplier issues, high order volume, platform changes or circumstances outside our control.</li><li><strong>Supplier issues.</strong> If a supplier fails to fulfill an order or experiences an issue, Sarah Shop will attempt to resolve the situation where possible. Refunds are not guaranteed for supplier-related issues.</li><li><strong>Service termination.</strong> If a service is terminated, discontinued, revoked or affected by a platform, refund or replacement eligibility will depend on the specific product's stated terms.</li><li><strong>Chargebacks.</strong> Unauthorized chargebacks or payment disputes may result in a permanent ban and blacklist from Sarah Shop and its services. Contact support before opening a dispute.</li><li><strong>Proof of purchase.</strong> Keep your Invoice/Order ID and relevant order information until your order and warranty period have ended.</li></ul>
+    </section><section class="legal-card glass tilt holo depth-shadow reveal" id="delivery">
+      <div class="legal-num">02</div>
+      <div class="kicker">SECTION 02</div>
       <h2>Delivery & Orders</h2>
-      <ul>
-        <li>Delivery times depend on the product, service and current stock.</li>
-        <li><strong>Social media services:</strong> Delivery may take approximately 5 minutes–48 hours depending on the service, stock and current order volume.</li>
-        <li><strong>Discord Server Boosts:</strong> Delivery may take up to 10 hours depending on stock and order volume.</li>
-        <li>Delivery estimates are not guarantees of an exact completion time.</li>
-        <li>Do not place duplicate orders while an existing order is processing unless instructed by support.</li>
-        <li>Customers are responsible for providing the correct information required to complete their order.</li>
-        <li>Orders submitted with incorrect or incomplete information may not qualify for replacement.</li>
-      </ul>
-    </section>
-
-    <section class="policy" id="refunds">
-      <div class="policy-num">03</div>
-      <small>SECTION 03</small>
+      <ul><li>Delivery times depend on the product, service and current stock.</li><li><strong>Social media services:</strong> Delivery may take approximately 5 minutes–48 hours depending on the service, stock and current order volume.</li><li><strong>Discord Server Boosts:</strong> Delivery may take up to 10 hours depending on stock and order volume.</li><li>Delivery estimates are not guarantees of an exact completion time.</li><li>Do not place duplicate orders while an existing order is processing unless instructed by support.</li><li>Customers are responsible for providing the correct information required to complete their order.</li><li>Orders submitted with incorrect or incomplete information may not qualify for replacement.</li></ul>
+    </section><section class="legal-card glass tilt holo depth-shadow reveal" id="refunds">
+      <div class="legal-num">03</div>
+      <div class="kicker">SECTION 03</div>
       <h2>Refunds & Replacements</h2>
-      <ul>
-        <li>No refunds will be issued unless specifically stated otherwise.</li>
-        <li>Where applicable, replacements or store credit may be offered instead of a refund.</li>
-        <li>Replacement eligibility depends on the individual product's warranty and description.</li>
-        <li>Products without a stated warranty should be considered non-warranty products.</li>
-        <li>We are not responsible for problems caused by the customer changing, modifying, removing, restricting or otherwise interfering with a purchased product.</li>
-        <li>If an account or service stops working, contact support before attempting to modify it.</li>
-      </ul>
-    </section>
-
-    <section class="policy" id="social">
-      <div class="policy-num">04</div>
-      <small>SECTION 04</small>
+      <ul><li>No refunds will be issued unless specifically stated otherwise.</li><li>Where applicable, replacements or store credit may be offered instead of a refund.</li><li>Replacement eligibility depends on the individual product's warranty and description.</li><li>Products without a stated warranty should be considered non-warranty products.</li><li>We are not responsible for problems caused by the customer changing, modifying, removing, restricting or otherwise interfering with a purchased product.</li><li>If an account or service stops working, contact support before attempting to modify it.</li></ul>
+    </section><section class="legal-card glass tilt holo depth-shadow reveal" id="social">
+      <div class="legal-num">04</div>
+      <div class="kicker">SECTION 04</div>
       <h2>Social Media Services</h2>
-
-      <div class="social-grid">
-        <div class="social-box"><b>Instagram</b><span>Followers • Likes • Views</span></div>
-        <div class="social-box"><b>TikTok</b><span>Followers • Likes • Views</span></div>
-        <div class="social-box"><b>YouTube</b><span>Likes</span></div>
-      </div>
-
-      <ul>
-        <li>Delivery may take approximately 5 minutes–48 hours depending on the service, stock and order volume.</li>
-        <li>Some orders may begin or complete much sooner, while others may take longer.</li>
-        <li>Please be patient while your order is processing.</li>
-        <li>Do not place duplicate orders for the same target while an existing order is processing.</li>
-        <li>Results and availability may vary depending on the platform and current service conditions.</li>
-        <li>Permanent retention is not guaranteed unless specifically stated in the product description.</li>
-      </ul>
-    </section>
-
-    <section class="policy" id="members">
-      <div class="policy-num">05</div>
-      <small>SECTION 05</small>
+      <ul><li>Delivery may take approximately 5 minutes–48 hours depending on the service, stock and order volume.</li><li>Some orders may begin or complete much sooner, while others may take longer.</li><li>Please be patient while your order is processing.</li><li>Do not place duplicate orders for the same target while an existing order is processing.</li><li>Results and availability may vary depending on the platform and current service conditions.</li><li>Permanent retention is not guaranteed unless specifically stated in the product description.</li></ul>
+    </section><section class="legal-card glass tilt holo depth-shadow reveal" id="members">
+      <div class="legal-num">05</div>
+      <div class="kicker">SECTION 05</div>
       <h2>Discord Members</h2>
-      <ul>
-        <li>Member delivery times may vary depending on available stock and current order volume.</li>
-      </ul>
-    </section>
+      <ul><li>Member delivery times may vary depending on available stock and current order volume.</li></ul>
+    </section></div>
   </div>
+  <section class="legal-cta glass holo depth-shadow reveal"><div><div class="kicker">NEED HELP?</div><h2>ASK BEFORE YOU BUY.</h2><p>If anything about a product, warranty, delivery, or these terms is unclear, open a Purchase Ticket first.</p></div><a class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank">Open Purchase Ticket →</a></section>
+  <footer class="site-footer"><span>SARAH SHOP © 2026</span><span>TERMS OF SERVICE</span><a href="index.html">Return to Store</a></footer>
 </main>
-
-<section class="cta">
-  <div>
-    <h3>Need help before buying?</h3>
-    <p>Open a ticket in the Sarah Shop Discord if you have questions about a product, delivery, warranty or these terms.</p>
-  </div>
-
-  <a href="https://discord.gg/AEdJtcKwVB" target="_blank" class="nav-btn primary">
-    Open Discord Ticket →
-  </a>
-</section>
-
-<footer>
-  <span>SARAH SHOP © 2026</span>
-  <span>TERMS OF SERVICE</span>
-  <a href="website.html">Return to Store</a>
-</footer>
-
-</body>
-</html>
+<script src="ui.js"></script>
+</body></html>

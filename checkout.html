@@ -1,274 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Checkout — Sarah Shop</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order Review — Sarah Shop</title>
 <link rel="icon" href="sarah-logo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
-:root{
-  --c:#72eaff;
-  --b:#0568ff;
-  --w:#f7fbff;
-  --m:#768ba0;
-  --l:rgba(83,198,255,.15);
+.checkout-shell{width:min(94%,1250px);margin:45px auto 90px;display:grid;grid-template-columns:1fr .95fr;gap:18px;align-items:stretch}
+.order-card,.ticket-card{border-radius:26px;overflow:hidden}
+.order-visual{height:300px;position:relative;overflow:hidden;background:#050b12}.order-visual img{width:100%;height:100%;object-fit:cover}.order-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 45%,#07111c 94%)}
+.order-body{padding:26px}.order-body h1{font-size:30px;margin-top:8px}.label{margin-top:20px;color:#4f708a;font-size:8px;font-weight:900;letter-spacing:1.1px}.value{margin-top:6px}.price{margin-top:6px;font:800 40px Orbitron;color:var(--cyan)}
+.orderline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.copy{padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:#081522;color:#8da6ba;font-size:8px;font-weight:900;cursor:pointer}
+.summary{margin-top:20px;padding:14px;border:1px solid var(--line);border-radius:13px;background:#06101a;color:#7f94a7;font-size:10px;line-height:1.7}
+.ticket-card{padding:30px;display:flex;flex-direction:column;justify-content:center}.ticket-card h2{font-size:34px;margin-top:8px}.ticket-card>p{color:#7c91a5;font-size:11px;line-height:1.75}
+.flow{position:relative;margin-top:18px;display:grid;gap:10px}.flow:before{content:"";position:absolute;left:18px;top:24px;bottom:24px;width:1px;background:linear-gradient(var(--cyan),rgba(105,236,255,.05))}
+.step{position:relative;padding:14px 14px 14px 48px;border:1px solid var(--line);border-radius:14px;background:#06101a}.step-num{position:absolute;left:8px;top:12px;width:22px;height:22px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#00131c;display:grid;place-items:center;font:800 8px Orbitron}.step b{display:block;font-size:11px}.step p{margin:4px 0 0;color:#6f879c;font-size:9px;line-height:1.55}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.actions .primary{min-width:210px}
+.note{margin-top:14px;color:#5d758b;font-size:9px;line-height:1.6}
+@media(max-width:850px){.checkout-shell{grid-template-columns:1fr;margin-top:25px}.order-visual{height:230px}}@media(max-width:480px){.order-body,.ticket-card{padding:22px}.ticket-card h2{font-size:27px}}
+
+.checkout-shell:before{
+  content:"";position:absolute;left:50%;top:150px;width:520px;height:520px;border-radius:50%;
+  border:1px solid rgba(105,236,255,.08);transform:translateX(-50%) rotateX(68deg);pointer-events:none;z-index:-1
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 50% -10%,rgba(0,183,255,.14),transparent 28%),
-    linear-gradient(#02040a,#030812 55%,#02040a);
-  color:var(--w);
-  font-family:Manrope,sans-serif;
+.order-card,.ticket-card{position:relative}
+.order-card:after,.ticket-card:after{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),0 0 38px rgba(20,120,255,.06)
 }
-.wrap{width:min(94%,1100px);margin:auto}
-.nav{
-  margin:16px auto;
-  padding:14px 16px;
-  border:1px solid var(--l);
-  border-radius:20px;
-  background:rgba(7,17,28,.9);
-  backdrop-filter:blur(16px);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.order-visual:before{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(115deg,transparent 38%,rgba(105,236,255,.07) 50%,transparent 62%);
+  transform:translateX(-40%);animation:scan 6s linear infinite
 }
-.brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  text-decoration:none;
-  color:inherit;
-}
-.brand img{width:46px;height:46px;border-radius:14px}
-.brand b,h1,h2{font-family:Orbitron}
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:12px 15px;
-  border-radius:11px;
-  text-decoration:none;
-  border:1px solid var(--l);
-  background:#091522;
-  color:#9eb0c2;
-  font-size:11px;
-  font-weight:800;
-  transition:.2s ease;
-}
-.btn:hover{transform:translateY(-2px);border-color:rgba(114,234,255,.38)}
-.btn.primary{
-  background:linear-gradient(135deg,var(--c),var(--b));
-  color:#001018;
-  border:none;
-  box-shadow:0 10px 32px rgba(5,104,255,.18);
-}
-.grid{
-  display:grid;
-  grid-template-columns:.9fr 1.1fr;
-  gap:16px;
-  margin:50px auto 100px;
-}
-.card{
-  border:1px solid var(--l);
-  border-radius:22px;
-  background:linear-gradient(145deg,#091522,#05101a);
-  padding:30px;
-  box-shadow:0 24px 70px rgba(0,0,0,.18);
-}
-.label{
-  color:#4f718e;
-  font-size:8px;
-  font-weight:800;
-  letter-spacing:1px;
-  margin-top:22px;
-}
-.value{margin-top:5px}
-.total{
-  font-family:Orbitron;
-  font-size:38px;
-  color:var(--c);
-  margin-top:7px;
-}
-.status{
-  margin-top:22px;
-  padding:15px;
-  border:1px solid var(--l);
-  border-radius:12px;
-  background:#06101a;
-  color:#8194a7;
-  font-size:11px;
-  line-height:1.65;
-}
-.purchase-card{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  min-height:430px;
-}
-.purchase-card h2{
-  margin:0 0 10px;
-  font-size:30px;
-}
-.purchase-card p{
-  color:var(--m);
-  font-size:12px;
-  line-height:1.75;
-  margin:0;
-  max-width:560px;
-}
-.step{
-  margin-top:22px;
-  padding:16px;
-  border:1px solid var(--l);
-  border-radius:14px;
-  background:#06101a;
-}
-.step small{
-  color:var(--c);
-  font-size:8px;
-  font-weight:900;
-  letter-spacing:1.2px;
-}
-.step b{
-  display:block;
-  margin-top:6px;
-  font-size:13px;
-}
-.step p{
-  margin-top:5px;
-  font-size:10px;
-}
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:20px;
-}
-.actions .primary{
-  min-width:190px;
-  font-size:12px;
-}
-.note{
-  margin-top:15px;
-  color:#587188;
-  font-size:9px;
-  line-height:1.6;
-}
-@media(max-width:800px){
-  .grid{grid-template-columns:1fr;margin-top:25px}
-  .purchase-card{min-height:auto}
-}
+@keyframes scan{to{transform:translateX(40%)}}
+.ticket-card .step{transition:transform .2s ease,border-color .2s ease}
+.ticket-card .step:hover{transform:translateX(4px);border-color:var(--line2)}
 </style>
 </head>
-<body>
+<body><div class="aurora"></div>
+<nav class="site-nav wrap glass"><a class="brand" href="index.html"><img src="sarah-logo.png"><div><strong>SARAH SHOP</strong><small>ORDER REVIEW</small></div></a><div class="nav-actions"><a class="btn" href="index.html">← Store</a><a class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank">Discord</a></div></nav>
 
-<nav class="nav wrap">
-  <a class="brand" href="index.html">
-    <img src="sarah-logo.png" alt="Sarah Shop">
-    <b>SARAH SHOP</b>
-  </a>
-  <a class="btn" href="index.html">← Store</a>
-</nav>
+<main class="checkout-shell scene reveal">
+  <section class="order-card glass tilt holo depth-shadow">
+    <div class="order-visual"><img id="productImage" src="sarah-logo.png" alt=""></div>
+    <div class="order-body depth-1">
+      <div class="kicker">SELECTED PRODUCT</div>
+      <h1 id="name">Loading…</h1>
+      <div class="label">OPTION</div><div id="option" class="value">—</div>
+      <div class="label">PRICE</div><div id="usd" class="price">$0.00</div>
+      <div class="label">ORDER ID</div><div class="orderline"><div id="order" class="value">—</div><button class="copy" id="copyOrder">COPY</button></div>
+      <div class="summary">Review this page before continuing. The final order, availability, payment, and delivery details are confirmed inside your Discord Purchase Ticket.</div>
+    </div>
+  </section>
 
-<main class="wrap grid">
-
-<section class="card">
-  <h1>Order Review</h1>
-
-  <div class="label">PRODUCT</div>
-  <div id="name" class="value">—</div>
-
-  <div class="label">OPTION</div>
-  <div id="option" class="value">—</div>
-
-  <div class="label">PRICE</div>
-  <div id="usd" class="total">$0.00</div>
-
-  <div class="label">ORDER ID</div>
-  <div id="order" class="value">—</div>
-
-  <div class="status">
-    Review your product and option, then open a Purchase Ticket in Discord.
-    Staff will confirm the exact order and payment details with you there.
-  </div>
-</section>
-
-<section class="card purchase-card">
-  <h2>Purchase on Discord</h2>
-  <p>
-    Your order is ready to continue. Open a Purchase Ticket and send staff
-    your Order ID, product, and option so they know exactly what you selected.
-  </p>
-
-  <div class="step">
-    <small>STEP 1</small>
-    <b>Open a Purchase Ticket</b>
-    <p>Use the button below to join/open Sarah Shop Discord.</p>
-  </div>
-
-  <div class="step">
-    <small>STEP 2</small>
-    <b>Send your Order ID</b>
-    <p>Staff will confirm the exact product, price, and delivery details before payment.</p>
-  </div>
-
-  <div class="actions">
-    <a class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank" rel="noopener">
-      Purchase Ticket →
-    </a>
-    <a class="btn" href="index.html">Keep Browsing</a>
-  </div>
-
-  <div class="note">
-    Do not send payment until staff confirms the exact order in your Purchase Ticket.
-  </div>
-</section>
-
+  <section class="ticket-card glass tilt holo depth-shadow">
+    <div class="kicker">PURCHASE FLOW</div>
+    <h2>FINISH IN DISCORD</h2>
+    <p>Your website order is ready. Use your Order ID in a Purchase Ticket so staff immediately knows exactly what you selected.</p>
+    <div class="flow">
+      <div class="step"><span class="step-num">1</span><b>Open a Purchase Ticket</b><p>Use the button below to enter the Sarah Shop Discord.</p></div>
+      <div class="step"><span class="step-num">2</span><b>Paste your Order ID</b><p>Copy the Order ID from the order card and send it in the ticket.</p></div>
+      <div class="step"><span class="step-num">3</span><b>Confirm the exact order</b><p>Staff confirms product, option, price, stock, and delivery.</p></div>
+      <div class="step"><span class="step-num">4</span><b>Pay & receive</b><p>Payment and final delivery are handled in the Purchase Ticket.</p></div>
+    </div>
+    <div class="actions"><a class="btn primary" href="https://discord.gg/rAQcaKJSF8" target="_blank">Open Purchase Ticket →</a><a class="btn" href="index.html">Keep Browsing</a></div>
+    <div class="note">Do not send payment until the exact order has been confirmed in the ticket.</div>
+  </section>
 </main>
 
-<script src="products.js"></script>
+<script src="products.js"></script><script src="ui.js"></script>
 <script>
-const q = new URLSearchParams(location.search);
-const p = SARAH_PRODUCTS.find(x => x.id === q.get("id"));
-
-function makeOrderId(){
-  const now = new Date();
-  const date =
-    now.getFullYear().toString() +
-    String(now.getMonth()+1).padStart(2,"0") +
-    String(now.getDate()).padStart(2,"0");
-
-  const bytes = new Uint8Array(5);
-  crypto.getRandomValues(bytes);
-
-  const random = Array.from(bytes)
-    .map(b => b.toString(16).padStart(2,"0"))
-    .join("")
-    .toUpperCase();
-
-  return `SS-${date}-${random}`;
-}
-
-const orderId = makeOrderId();
-document.getElementById("order").textContent = orderId;
-
-if(!p){
-  document.getElementById("name").textContent = "Invalid product";
-  document.getElementById("option").textContent = "Return to store";
-  document.getElementById("usd").textContent = "—";
-}else{
-  document.getElementById("name").textContent = p.name;
-  document.getElementById("option").textContent = p.option;
-  document.getElementById("usd").textContent = "$" + Number(p.price).toFixed(2);
-}
+const IMAGES={Netflix:"netflix.png",Crunchyroll:"crunchyroll.png","HBO Max":"hbo-max.png",Spotify:"spotify.png","Prime Video":"prime-video.png","Paramount+":"paramount-plus.png",ChatGPT:"chatgpt.png",Claude:"claude.png",Gemini:"gemini.png","Server Boosts":"discord.png","Real Members":"discord.png",TikTok:"tiktok.png",Instagram:"instagram.png",YouTube:"youtube.png",Fortnite:"fortnite.png",Valorant:"valorant.png"};
+const q=new URLSearchParams(location.search),p=SARAH_PRODUCTS.find(x=>x.id===q.get("id"));
+function makeId(){const d=new Date(),date=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0"),b=new Uint8Array(5);crypto.getRandomValues(b);return "SS-"+date+"-"+Array.from(b,x=>x.toString(16).padStart(2,"0")).join("").toUpperCase()}
+const oid=makeId();document.getElementById("order").textContent=oid;
+if(!p){name.textContent="Invalid Product";option.textContent="Return to store";usd.textContent="—"}else{name.textContent=p.name;option.textContent=p.option;usd.textContent="$"+Number(p.price).toFixed(2);productImage.src=IMAGES[p.name]||"sarah-logo.png";productImage.alt=p.name}
+copyOrder.onclick=async()=>{try{await navigator.clipboard.writeText(oid);copyOrder.textContent="COPIED ✓";setTimeout(()=>copyOrder.textContent="COPY",1200)}catch(e){copyOrder.textContent="SELECT"}}
 </script>
-
-</body>
-</html>
+</body></html>
