@@ -1,5 +1,410 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sarah Shop — Litecoin Checkout</title><link rel="icon" href="sarah-logo.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet"><style>
-:root{--bg:#02040a;--p:#07111c;--p2:#0a1625;--c:#72eaff;--b:#0568ff;--w:#f7fbff;--m:#768ba0;--l:rgba(83,198,255,.15)}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,rgba(0,183,255,.14),transparent 28%),linear-gradient(#02040a,#030812 55%,#02040a);color:var(--w);font-family:Manrope,sans-serif}a{color:inherit}.wrap{width:min(94%,1500px);margin:auto}.grid{position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(61,183,255,.024) 1px,transparent 1px),linear-gradient(90deg,rgba(61,183,255,.024) 1px,transparent 1px);background-size:48px 48px}.nav{width:min(94%,1500px);margin:16px auto;padding:14px 16px;border:1px solid var(--l);border-radius:20px;background:rgba(4,10,18,.88);display:flex;justify-content:space-between;align-items:center;position:sticky;top:12px;z-index:5}.brand{display:flex;gap:12px;align-items:center;text-decoration:none}.brand img{width:46px;height:46px;border-radius:14px}.brand b{font-family:Orbitron}.small{font-size:8px;color:#61768a;letter-spacing:1.3px}.btn{padding:11px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--l);background:#091522;color:#9eb0c2;font-size:11px;font-weight:800}.btn.primary{background:linear-gradient(135deg,var(--c),var(--b));color:#001018;border:none}.banner{overflow:hidden;border:1px solid var(--l);border-radius:28px}.banner img{width:100%;height:auto;display:block}.hero{margin-top:16px;padding:28px;border:1px solid var(--l);border-radius:22px;background:linear-gradient(145deg,#091522,#05101a)}h1{font-family:Orbitron;font-size:clamp(38px,5vw,68px);line-height:.92;margin:0}.accent{color:var(--c)}.hero p{color:var(--m);font-size:12px;line-height:1.7;max-width:760px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:70px 0 18px}.tab{padding:10px 14px;border-radius:999px;border:1px solid var(--l);background:#07111c;color:#6e8499;font-weight:800;cursor:pointer}.tab.active,.tab:hover{background:linear-gradient(135deg,var(--c),var(--b));color:#001018}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-bottom:90px}.product{border:1px solid var(--l);border-radius:18px;background:linear-gradient(145deg,#091522,#05101a);padding:18px}.product small{color:#4f718e;font-weight:800;font-size:7px}.product h3{margin:14px 0}.rows{display:grid;gap:8px}.row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:9px 10px;border-radius:10px;border:1px solid rgba(83,198,255,.09);background:#06101a;color:#7d91a5;font-size:10px}.row b{color:var(--c)}.buy{padding:7px 10px;border-radius:8px;text-decoration:none;background:rgba(0,183,255,.1);color:var(--c);border:1px solid rgba(0,183,255,.18);font-weight:800}.hidden{display:none}@media(max-width:900px){.products{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.products{grid-template-columns:1fr}.small{display:none}}
-</style></head><body><div class="grid"></div><nav class="nav"><a class="brand" href="index.html"><img src="sarah-logo.png"><div><b>SARAH SHOP</b><div class="small">LITECOIN CHECKOUT</div></div></a><div><a class="btn" href="tos.html">Terms</a> <a class="btn primary" target="_blank" href="https://discord.gg/AEdJtcKwVB">Discord</a></div></nav><main class="wrap"><div class="banner"><img src="sarah-banner.png"></div><section class="hero"><h1>SHOP. PAY. <span class="accent">DONE.</span></h1><p>Choose an option below and pay with Litecoin. After sending payment, keep your order ID and transaction ID (TXID), then open a Discord purchase ticket.</p></section><div class="tabs"><button class="tab active" data-cat="all">All</button><button class="tab" data-cat="streaming">Streaming</button><button class="tab" data-cat="ai">AI</button><button class="tab" data-cat="discord">Discord</button><button class="tab" data-cat="social">Social</button><button class="tab" data-cat="gaming">Gaming</button></div><div id="products" class="products"></div></main><script src="products.js"></script><script>
-const root=document.getElementById('products'),groups={};for(const p of SARAH_PRODUCTS){const k=p.cat+'|'+p.name;(groups[k]??=[]).push(p)}for(const [k,items] of Object.entries(groups)){const [cat,name]=k.split('|');const card=document.createElement('section');card.className='product';card.dataset.cat=cat;card.innerHTML=`<small>${cat.toUpperCase()}</small><h3>${name}</h3><div class="rows"></div>`;for(const p of items){const r=document.createElement('div');r.className='row';r.innerHTML=`<span>${p.option}</span><b>$${p.price}</b><a class="buy" href="checkout.html?id=${encodeURIComponent(p.id)}">Buy</a>`;card.querySelector('.rows').appendChild(r)}root.appendChild(card)}document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.product').forEach(c=>c.classList.toggle('hidden',t.dataset.cat!=='all'&&c.dataset.cat!==t.dataset.cat))});
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sarah Shop — Store</title>
+<link rel="icon" href="sarah-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#02040a;--p:#07111c;--p2:#0a1625;--c:#72eaff;--b:#0568ff;
+  --w:#f7fbff;--m:#768ba0;--l:rgba(83,198,255,.15);--green:#78ffae;--gold:#ffc56d
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--w);font-family:Manrope,sans-serif;
+  background:radial-gradient(circle at 50% -10%,rgba(0,183,255,.14),transparent 28%),
+  linear-gradient(#02040a,#030812 55%,#02040a)
+}
+a{color:inherit}.wrap{width:min(94%,1500px);margin:auto}
+.grid{position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(61,183,255,.024) 1px,transparent 1px),linear-gradient(90deg,rgba(61,183,255,.024) 1px,transparent 1px);background-size:48px 48px}
+.nav{
+  width:min(94%,1500px);margin:16px auto;padding:14px 16px;border:1px solid var(--l);
+  border-radius:20px;background:rgba(4,10,18,.88);display:flex;justify-content:space-between;
+  align-items:center;position:sticky;top:12px;z-index:20;backdrop-filter:blur(18px)
+}
+.brand{display:flex;gap:12px;align-items:center;text-decoration:none}
+.brand img{width:46px;height:46px;border-radius:14px;object-fit:cover;border:1px solid rgba(114,234,255,.25)}
+.brand b{font-family:Orbitron}.small{font-size:8px;color:#61768a;letter-spacing:1.3px}
+.btn{
+  padding:11px 14px;border-radius:10px;text-decoration:none;border:1px solid var(--l);
+  background:#091522;color:#9eb0c2;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center
+}
+.btn.primary{background:linear-gradient(135deg,var(--c),var(--b));color:#001018;border:none}
+.banner{overflow:hidden;border:1px solid var(--l);border-radius:28px}
+.banner img{width:100%;height:auto;display:block}
+.hero{
+  margin-top:16px;padding:30px;border:1px solid var(--l);border-radius:22px;
+  background:linear-gradient(145deg,#091522,#05101a);display:flex;align-items:end;justify-content:space-between;gap:22px
+}
+h1{font-family:Orbitron;font-size:clamp(38px,5vw,68px);line-height:.92;margin:0}.accent{color:var(--c)}
+.hero p{color:var(--m);font-size:12px;line-height:1.7;max-width:760px}
+.store-status{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
+.status-pill{
+  padding:8px 10px;border:1px solid var(--l);border-radius:999px;background:#06101a;
+  color:#7e93a6;font-size:9px;font-weight:800
+}
+.status-pill strong{color:var(--green)}
+.ticket-note{
+  margin-top:18px;padding:15px;border:1px solid rgba(255,197,109,.18);border-radius:13px;
+  background:rgba(255,197,109,.04);color:#b89462;font-size:10px;line-height:1.65
+}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:65px 0 18px}
+.tab{
+  padding:10px 14px;border-radius:999px;border:1px solid var(--l);background:#07111c;
+  color:#6e8499;font-weight:800;cursor:pointer
+}
+.tab.active,.tab:hover{background:linear-gradient(135deg,var(--c),var(--b));color:#001018}
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;padding-bottom:90px}
+.product{
+  position:relative;overflow:hidden;border:1px solid var(--l);border-radius:20px;
+  background:linear-gradient(145deg,#091522,#05101a);padding:19px;transition:.2s ease
+}
+.product:hover{transform:translateY(-3px);border-color:rgba(83,198,255,.3);box-shadow:0 18px 50px rgba(0,0,0,.18)}
+.product:before{
+  content:"";position:absolute;inset:0 0 auto;height:2px;
+  background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:.45
+}
+.product-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.product small{color:#4f718e;font-weight:800;font-size:7px;letter-spacing:1px}
+.badge{
+  padding:6px 8px;border-radius:999px;background:rgba(120,255,174,.06);
+  border:1px solid rgba(120,255,174,.13);color:var(--green);font-size:7px;font-weight:900;letter-spacing:.6px
+}
+.product h3{margin:12px 0 4px;font-size:21px}
+.desc{color:#6f8498;font-size:10px;line-height:1.55;min-height:31px}
+.details{
+  display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:14px 0
+}
+.detail{
+  padding:9px;border:1px solid rgba(83,198,255,.08);border-radius:10px;background:#06101a
+}
+.detail span{display:block;color:#49677e;font-size:7px;font-weight:900;letter-spacing:.7px}
+.detail b{display:block;margin-top:4px;color:#9db0c1;font-size:9px}
+.service-list{
+  margin:0 0 14px;padding:11px;border:1px solid rgba(83,198,255,.08);
+  border-radius:11px;background:#050e17;color:#7f94a7;font-size:9px;line-height:1.7
+}
+.service-list strong{color:#b6c8d7}
+.rows{display:grid;gap:8px}
+.row{
+  display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px;
+  border-radius:10px;border:1px solid rgba(83,198,255,.09);background:#06101a;color:#7d91a5;font-size:10px
+}
+.row b{color:var(--c);font-family:Orbitron;font-size:10px}
+.buy{
+  padding:8px 10px;border-radius:8px;text-decoration:none;background:rgba(0,183,255,.1);
+  color:var(--c);border:1px solid rgba(0,183,255,.18);font-weight:800;transition:.15s ease
+}
+.buy:hover{background:linear-gradient(135deg,var(--c),var(--b));color:#001018}
+.card-foot{
+  margin-top:12px;padding-top:11px;border-top:1px solid rgba(83,198,255,.07);
+  color:#526c81;font-size:8px;line-height:1.5
+}
+.hidden{display:none}
+@media(max-width:1000px){.products{grid-template-columns:repeat(2,1fr)}.hero{display:block}}
+@media(max-width:620px){.products{grid-template-columns:1fr}.small{display:none}.details{grid-template-columns:1fr}.nav{padding:11px}.hero{padding:22px}}
+</style>
+</head>
+
+<body>
+<div class="grid"></div>
+
+<nav class="nav">
+  <a class="brand" href="index.html">
+    <img src="sarah-logo.png" alt="Sarah Shop">
+    <div><b>SARAH SHOP</b><div class="small">LITECOIN CHECKOUT</div></div>
+  </a>
+  <div>
+    <a class="btn" href="tos.html">Terms</a>
+    <a class="btn primary" target="_blank" href="https://discord.gg/AEdJtcKwVB">Discord</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="banner"><img src="sarah-banner.png" alt="Sarah Shop banner"></div>
+
+  <section class="hero">
+    <div>
+      <h1>FIND IT. CONFIRM IT. <span class="accent">GET IT.</span></h1>
+      <p>
+        Browse the store below. Product cards now show what each category includes before checkout.
+        Exact service, quantity, account details, region, warranty, and final order details should be confirmed
+        in a Discord Purchase Ticket before you send Litecoin.
+      </p>
+      <div class="store-status">
+        <span class="status-pill"><strong>●</strong> STORE ONLINE</span>
+        <span class="status-pill">Ł LTC ACCEPTED</span>
+        <span class="status-pill">🎫 TICKET CONFIRMATION</span>
+      </div>
+      <div class="ticket-note">
+        <b>Important:</b> A product card may cover multiple service types. For example, TikTok can include
+        views, likes, or followers. Your checkout will require you to confirm the exact order with staff before payment.
+      </div>
+    </div>
+    <a class="btn primary" href="#products">Browse Products ↓</a>
+  </section>
+
+  <div class="tabs">
+    <button class="tab active" data-cat="all">All</button>
+    <button class="tab" data-cat="streaming">Streaming</button>
+    <button class="tab" data-cat="ai">AI</button>
+    <button class="tab" data-cat="discord">Discord</button>
+    <button class="tab" data-cat="social">Social</button>
+    <button class="tab" data-cat="gaming">Gaming</button>
+  </div>
+
+  <div id="products" class="products"></div>
+</main>
+
+<script src="products.js"></script>
+
+<script>
+const CARD_INFO = {
+  "TikTok":{
+    desc:"Social media growth services for TikTok.",
+    services:"Views • Likes • Followers",
+    confirm:"Service + quantity + target link",
+    delivery:"5 min – 48 hrs"
+  },
+  "Instagram":{
+    desc:"Instagram engagement and growth options.",
+    services:"Followers • Likes • Views",
+    confirm:"Service + quantity + profile/post",
+    delivery:"5 min – 48 hrs"
+  },
+  "YouTube":{
+    desc:"YouTube engagement services.",
+    services:"Likes • Views • Other available services",
+    confirm:"Service + quantity + video/channel",
+    delivery:"5 min – 48 hrs"
+  },
+  "Server Boosts":{
+    desc:"Discord server boost packages.",
+    services:"Server boosts",
+    confirm:"Boost count + duration + server",
+    delivery:"Up to 10 hrs"
+  },
+  "Real Members":{
+    desc:"Discord member packages.",
+    services:"Discord members",
+    confirm:"Quantity + server invite",
+    delivery:"Varies by stock"
+  },
+  "Aged Accounts":{
+    desc:"Available aged Discord account tiers.",
+    services:"Account age/type varies by tier",
+    confirm:"Exact account details + warranty",
+    delivery:"Confirm in ticket"
+  },
+  "Decorations":{
+    desc:"Available Discord decoration options.",
+    services:"Profile/account decorations",
+    confirm:"Exact decoration/item",
+    delivery:"Confirm in ticket"
+  },
+  "ChatGPT":{
+    desc:"Available ChatGPT service plans.",
+    services:"Plan access",
+    confirm:"Plan + delivery/account details",
+    delivery:"Confirm in ticket"
+  },
+  "Claude":{
+    desc:"Available Claude service plans.",
+    services:"Plan access",
+    confirm:"Plan + delivery/account details",
+    delivery:"Confirm in ticket"
+  },
+  "Gemini":{
+    desc:"Available Gemini service plans.",
+    services:"Plan access",
+    confirm:"Plan + delivery/account details",
+    delivery:"Confirm in ticket"
+  },
+  "Netflix":{
+    desc:"Netflix account/service options.",
+    services:"Streaming access",
+    confirm:"Plan + region + warranty",
+    delivery:"Confirm in ticket"
+  },
+  "Crunchyroll":{
+    desc:"Crunchyroll account/service options.",
+    services:"Streaming access",
+    confirm:"Plan + region + warranty",
+    delivery:"Confirm in ticket"
+  },
+  "HBO Max":{
+    desc:"HBO Max account/service options.",
+    services:"Streaming access",
+    confirm:"Plan + region + warranty",
+    delivery:"Confirm in ticket"
+  },
+  "Spotify":{
+    desc:"Spotify account/service options.",
+    services:"Music streaming access",
+    confirm:"Plan + region + warranty",
+    delivery:"Confirm in ticket"
+  },
+  "Prime Video":{
+    desc:"Prime Video account/service options.",
+    services:"Streaming access",
+    confirm:"Plan + region + warranty",
+    delivery:"Confirm in ticket"
+  },
+  "Paramount+":{
+    desc:"Paramount+ account/service options.",
+    services:"Streaming access",
+    confirm:"Plan + region + warranty",
+    delivery:"Confirm in ticket"
+  },
+  "Fortnite":{
+    desc:"Fortnite account tiers based on available stock.",
+    services:"Gaming accounts",
+    confirm:"Exact skins/items/account details",
+    delivery:"Confirm in ticket"
+  },
+  "Rainbow Six":{
+    desc:"Rainbow Six account tiers.",
+    services:"Gaming accounts",
+    confirm:"Exact account contents/details",
+    delivery:"Confirm in ticket"
+  },
+  "Valorant":{
+    desc:"Valorant account tiers.",
+    services:"Gaming accounts",
+    confirm:"Exact skins/rank/account details",
+    delivery:"Confirm in ticket"
+  },
+  "Minecraft":{
+    desc:"Minecraft account options.",
+    services:"Gaming accounts",
+    confirm:"Edition/account details",
+    delivery:"Confirm in ticket"
+  },
+  "Roblox":{
+    desc:"Roblox account tiers based on available stock.",
+    services:"Gaming accounts",
+    confirm:"Exact account contents/details",
+    delivery:"Confirm in ticket"
+  },
+  "Rust":{
+    desc:"Rust account options.",
+    services:"Gaming accounts",
+    confirm:"Exact account details",
+    delivery:"Confirm in ticket"
+  },
+  "Apex":{
+    desc:"Apex account tiers.",
+    services:"Gaming accounts",
+    confirm:"Exact skins/rank/account details",
+    delivery:"Confirm in ticket"
+  },
+  "Steam Games Accounts":{
+    desc:"Steam account options based on available stock.",
+    services:"Steam game accounts",
+    confirm:"Exact games/account details",
+    delivery:"Confirm in ticket"
+  },
+  "Epic Games Accounts":{
+    desc:"Epic Games account options based on available stock.",
+    services:"Epic game accounts",
+    confirm:"Exact games/account details",
+    delivery:"Confirm in ticket"
+  }
+};
+
+function productCategory(p){
+  return p.cat || p.category || "other";
+}
+
+const root=document.getElementById("products");
+const groups={};
+
+for(const p of window.SARAH_PRODUCTS){
+  const cat=productCategory(p);
+  const key=cat+"|"+p.name;
+  (groups[key]??=[]).push(p);
+}
+
+for(const [key,items] of Object.entries(groups)){
+  const [cat,name]=key.split("|");
+  const info=CARD_INFO[name] || {
+    desc:"Available Sarah Shop product.",
+    services:"See available options below",
+    confirm:"Exact order details",
+    delivery:"Confirm in ticket"
+  };
+
+  const card=document.createElement("section");
+  card.className="product";
+  card.dataset.cat=cat;
+
+  card.innerHTML=`
+    <div class="product-top">
+      <small>${cat.toUpperCase()}</small>
+      <span class="badge">● AVAILABLE</span>
+    </div>
+
+    <h3>${name}</h3>
+    <div class="desc">${info.desc}</div>
+
+    <div class="details">
+      <div class="detail">
+        <span>DELIVERY</span>
+        <b>${info.delivery}</b>
+      </div>
+      <div class="detail">
+        <span>BEFORE PAYMENT</span>
+        <b>Confirm in ticket</b>
+      </div>
+    </div>
+
+    <div class="service-list">
+      <strong>Available:</strong> ${info.services}<br>
+      <strong>Confirm:</strong> ${info.confirm}
+    </div>
+
+    <div class="rows"></div>
+
+    <div class="card-foot">
+      Clicking Buy opens the safe checkout. You will confirm the exact order with staff before Litecoin payment unlocks.
+    </div>
+  `;
+
+  const rows=card.querySelector(".rows");
+
+  for(const p of items){
+    const row=document.createElement("div");
+    row.className="row";
+    row.innerHTML=`
+      <span>${p.option}</span>
+      <b>$${Number(p.price).toFixed(Number(p.price)%1 ? 2 : 0)}</b>
+      <a class="buy" href="checkout.html?id=${encodeURIComponent(p.id)}">Review →</a>
+    `;
+    rows.appendChild(row);
+  }
+
+  root.appendChild(card);
+}
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    tab.classList.add("active");
+
+    document.querySelectorAll(".product").forEach(card=>{
+      card.classList.toggle(
+        "hidden",
+        tab.dataset.cat!=="all" && card.dataset.cat!==tab.dataset.cat
+      );
+    });
+  });
+});
+</script>
+</body>
+</html>
